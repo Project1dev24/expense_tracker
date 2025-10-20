@@ -1,0 +1,259 @@
+{% extends "base.html" %} {% block title %}User Profile{% endblock %} {% block
+styles %}
+<style>
+    :root {
+        --body-bg: #f4f1ea;
+        --panel-bg: #ffffff;
+        --border-color: #000000;
+        --theme-accent-color: #aec6cf; /* Default: Pastel Blue */
+        --theme-contrast-color: #000000; /* Default for light accent */
+        --secondary-action-color: #85a0aa; /* Default: Darkened Pastel Blue */
+        --border-width: 2px;
+        --shadow-offset: 5px;
+    }
+
+    body {
+        background-color: var(--body-bg);
+        font-family:
+            -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+            Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+            "Segoe UI Symbol";
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .fw-bold {
+        font-weight: 700 !important;
+        color: var(--border-color);
+    }
+
+    .btn {
+        border: var(--border-width) solid var(--border-color);
+        box-shadow: 3px 3px 0px var(--border-color);
+        border-radius: 0.5rem;
+        font-weight: 700;
+        transition: all 0.15s ease-out;
+        padding: 0.5rem 1rem;
+    }
+
+    .btn:hover {
+
+    }
+
+    .btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0px var(--border-color);
+    }
+    .btn-primary:hover,
+    .btn-primary:focus,
+    a.btn-primary:hover,
+    a.btn-primary:focus,
+    .btn-group .btn-primary:hover,
+    .btn-group .btn-primary:focus,
+    .btn-group a.btn-primary:hover,
+    .btn-group a.btn-primary:focus {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important; /* Darker hover effect */
+        border-color: var(--border-color) !important;
+    }
+    .btn-primary:active,
+    a.btn-primary:active,
+    .btn-group .btn-primary:active,
+    .btn-group a.btn-primary:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    /* Enhanced styles for outline buttons to maintain theme colors */
+    .btn-outline-primary {
+        color: var(--border-color) !important;
+        border-color: var(--border-color) !important;
+        background-color: transparent !important;
+    }
+
+    /* All possible states for btn-outline-primary */
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus,
+    .btn-outline-primary.active,
+    .btn-outline-primary.dropdown-toggle.show,
+    a.btn-outline-primary:hover,
+    a.btn-outline-primary:focus,
+    a.btn-outline-primary.active,
+    a.btn-outline-primary.dropdown-toggle.show,
+    .btn-group .btn-outline-primary:hover,
+    .btn-group .btn-outline-primary:focus,
+    .btn-group .btn-outline-primary:active,
+    .btn-group .btn-outline-primary.active,
+    .btn-group .btn-outline-primary.dropdown-toggle.show,
+    .btn-group a.btn-outline-primary:hover,
+    .btn-group a.btn-outline-primary:focus,
+    .btn-group a.btn-outline-primary:active,
+    .btn-group a.btn-outline-primary.active,
+    .btn-group a.btn-outline-primary.dropdown-toggle.show,
+    .btn-group-sm .btn-outline-primary:hover,
+    .btn-group-sm .btn-outline-primary:focus,
+    .btn-group-sm .btn-outline-primary:active,
+    .btn-group-sm .btn-outline-primary.active,
+    .btn-group-sm .btn-outline-primary.dropdown-toggle.show,
+    .btn-group-sm a.btn-outline-primary:hover,
+    .btn-group-sm a.btn-outline-primary:focus,
+    .btn-group-sm a.btn-outline-primary.active,
+    .btn-group-sm a.btn-outline-primary.active,
+    .btn-group-sm a.btn-outline-primary.dropdown-toggle.show,
+    .w-100 .btn-outline-primary:hover,
+    .w-100 .btn-outline-primary:focus,
+    .w-100 .btn-outline-primary:active,
+    .w-100 .btn-outline-primary.active,
+    .w-100 .btn-outline-primary.dropdown-toggle.show,
+    .w-100 a.btn-outline-primary:hover,
+    .w-100 a.btn-outline-primary:focus,
+    .w-100 a.btn-outline-primary.active,
+    .w-100 a.btn-outline-primary.active,
+    .w-100 a.btn-outline-primary.dropdown-toggle.show {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    /* Focus states */
+    .btn-check:focus + .btn-outline-primary,
+    .btn-outline-primary:focus,
+    .btn-outline-primary.focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    .btn-warning {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-warning:hover,
+    .btn-warning:focus,
+    a.btn-warning:hover,
+    a.btn-warning:focus,
+    .btn-group .btn-warning:hover,
+    .btn-group .btn-warning:focus,
+    .btn-group a.btn-warning:hover,
+    .btn-group a.btn-warning:focus {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-warning:active,
+    a.btn-warning:active,
+    .btn-group .btn-warning:active,
+    .btn-group a.btn-warning:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-check:focus + .btn-warning,
+    .btn-warning:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    .btn-primary {
+        background-color: var(--theme-accent-color);
+        color: var(--theme-contrast-color);
+        border-color: var(--border-color);
+    }
+    .btn-primary:hover {
+        color: var(--theme-contrast-color);
+    }
+
+    .btn-secondary {
+        background-color: var(--secondary-action-color);
+        color: var(--theme-contrast-color);
+        border-color: var(--border-color);
+    }
+    .btn-secondary:hover {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel {
+        background-color: var(--panel-bg);
+        border: var(--border-width) solid var(--border-color);
+        border-radius: 1rem;
+        box-shadow: var(--shadow-offset) var(--shadow-offset) 0px
+            var(--border-color);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* Ensures children conform to rounded corners */
+    }
+
+    .panel-header {
+        padding: 0.75rem 1.25rem;
+        border-bottom: var(--border-width) solid var(--border-color);
+        background-color: var(--theme-accent-color);
+    }
+    .panel-header h5 {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel-body {
+        padding: 1rem;
+        flex-grow: 1;
+    }
+</style>
+{% endblock %} {% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="panel">
+                <div class="panel-header">
+                    <h5 class="fw-bold mb-0">User Profile</h5>
+                </div>
+                <div class="panel-body">
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h5>Personal Information</h5>
+                            <hr />
+                            <dl class="row">
+                                <dt class="col-sm-3">Name:</dt>
+                                <dd class="col-sm-9">{{ user.name }}</dd>
+
+                                <dt class="col-sm-3">Email:</dt>
+                                <dd class="col-sm-9">{{ user.email }}</dd>
+
+                                <dt class="col-sm-3">Joined:</dt>
+                                <dd class="col-sm-9">
+                                    {{ user.created_at.strftime('%d %B %Y') }}
+                                </dd>
+
+                                <dt class="col-sm-3">Last Login:</dt>
+                                <dd class="col-sm-9">
+                                    {{ user.last_seen.strftime('%d %B %Y %H:%M')
+                                    if user.last_seen else 'Not available' }}
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-12 text-center">
+                            <a
+                                href="{{ url_for('auth.edit_profile') }}"
+                                class="btn btn-primary"
+                            >
+                                <i class="fas fa-user-edit me-2"></i>Edit
+                                Profile
+                            </a>
+                            <a
+                                href="{{ url_for('auth.settings') }}"
+                                class="btn btn-secondary ms-2"
+                            >
+                                <i class="fas fa-cog me-2"></i>Settings
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

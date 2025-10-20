@@ -1,0 +1,179 @@
+{% extends "base.html" %} {% block title %}Login - Trip Expense Tracker{%
+endblock %} {% block styles %}
+<style>
+    :root {
+        --body-bg: #f4f1ea;
+        --panel-bg: #ffffff;
+        --border-color: #000000;
+        --theme-accent-color: #aec6cf; /* Default: Pastel Blue */
+        --theme-contrast-color: #000000; /* Default for light accent */
+        --secondary-action-color: #85a0aa; /* Default: Darkened Pastel Blue */
+        --border-width: 2px;
+        --shadow-offset: 5px;
+    }
+
+    body {
+        background-color: var(--body-bg);
+        font-family:
+            -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+            Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+            "Segoe UI Symbol";
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .fw-bold {
+        font-weight: 700 !important;
+        color: var(--border-color);
+    }
+
+    .btn {
+        border: var(--border-width) solid var(--border-color);
+        box-shadow: 3px 3px 0px var(--border-color);
+        border-radius: 0.5rem;
+        font-weight: 700;
+        transition: all 0.15s ease-out;
+        padding: 0.5rem 1rem;
+    }
+
+    .btn:hover {
+
+    }
+
+    .btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0px var(--border-color);
+    }
+
+    .btn-primary {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+     .btn-primary:hover,
+    .btn-primary:focus,
+    a.btn-primary:hover,
+    a.btn-primary:focus,
+    .btn-group .btn-primary:hover,
+    .btn-group .btn-primary:focus,
+    .btn-group a.btn-primary:hover,
+    .btn-group a.btn-primary:focus {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important; /* Darker hover effect */
+        border-color: var(--border-color) !important;
+    }
+      .btn-primary:active,
+    a.btn-primary:active,
+    .btn-group .btn-primary:active,
+    .btn-group a.btn-primary:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-check:focus + .btn-primary,
+    .btn-primary:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    .btn-secondary {
+        background-color: var(--secondary-action-color);
+        color: var(--theme-contrast-color);
+        border-color: var(--border-color);
+    }
+    .btn-secondary:hover {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel {
+        background-color: var(--panel-bg);
+        border: var(--border-width) solid var(--border-color);
+        border-radius: 1rem;
+        box-shadow: var(--shadow-offset) var(--shadow-offset) 0px
+            var(--border-color);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* Ensures children conform to rounded corners */
+    }
+
+    .panel-header {
+        padding: 0.75rem 1.25rem;
+        border-bottom: var(--border-width) solid var(--border-color);
+        background-color: var(--theme-accent-color);
+    }
+    .panel-header h5 {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel-body {
+        padding: 1rem;
+        flex-grow: 1;
+    }
+</style>
+{% endblock %} {% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="panel">
+            <div class="panel-header">
+                <h5 class="fw-bold mb-0">Login</h5>
+            </div>
+            <div class="panel-body">
+                <form method="POST" action="{{ url_for('auth.login') }}">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input
+                            type="email"
+                            class="form-control"
+                            id="email"
+                            name="email"
+                            required
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label"
+                            >Password</label
+                        >
+                        <input
+                            type="password"
+                            class="form-control"
+                            id="password"
+                            name="password"
+                            required
+                        />
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input
+                            type="checkbox"
+                            class="form-check-input"
+                            id="remember_me"
+                            name="remember_me"
+                        />
+                        <label class="form-check-label" for="remember_me"
+                            >Remember me</label
+                        >
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                        </button>
+                    </div>
+                </form>
+                <div class="text-center mt-3">
+                    <p class="mb-0">
+                        Don't have an account?
+                        <a href="{{ url_for('auth.register') }}">Register</a>
+                    </p>
+                    <p class="mb-0 mt-2">
+                        <a href="{{ url_for('auth.reset_password_request') }}"
+                            >Forgot Password?</a
+                        >
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

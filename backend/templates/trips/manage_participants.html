@@ -1,0 +1,942 @@
+{% extends 'base.html' %} {% block title %}Manage Participants - {{ trip.name
+}}{% endblock %} {% block styles %}
+<style>
+    :root {
+        --body-bg: #f4f1ea;
+        --panel-bg: #ffffff;
+        --border-color: #000000;
+        --theme-accent-color: #aec6cf; /* Default: Pastel Blue */
+        --theme-contrast-color: #000000; /* Default for light accent */
+        --secondary-action-color: #85a0aa; /* Default: Darkened Pastel Blue */
+        --border-width: 2px;
+        --shadow-offset: 5px;
+    }
+
+    body {
+        background-color: var(--body-bg);
+        font-family:
+            -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+            Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+            "Segoe UI Symbol";
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .fw-bold {
+        font-weight: 700 !important;
+        color: var(--border-color);
+    }
+
+    .btn {
+        border: var(--border-width) solid var(--border-color);
+        box-shadow: 3px 3px 0px var(--border-color);
+        border-radius: 0.5rem;
+        font-weight: 700;
+        transition: all 0.15s ease-out;
+        padding: 0.5rem 1rem;
+    }
+
+    .btn:hover {
+        /* No specific hover transform/shadow */
+    }
+
+    .btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0px var(--border-color);
+    }
+
+    .btn-primary {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-primary:hover,
+    .btn-primary:focus,
+    a.btn-primary:hover,
+    a.btn-primary:focus,
+    .btn-group .btn-primary:hover,
+    .btn-group .btn-primary:focus,
+    .btn-group a.btn-primary:hover,
+    .btn-group a.btn-primary:focus {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important; /* Darker hover effect */
+        border-color: var(--border-color) !important;
+    }
+    .btn-primary:active,
+    a.btn-primary:active,
+    .btn-group .btn-primary:active,
+    .btn-group a.btn-primary:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    /* Enhanced styles for outline buttons to maintain theme colors */
+    .btn-outline-primary {
+        color: var(--border-color) !important;
+        border-color: var(--border-color) !important;
+        background-color: transparent !important;
+    }
+
+    /* All possible states for btn-outline-primary */
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus,
+    .btn-outline-primary.active,
+    .btn-outline-primary.dropdown-toggle.show,
+    a.btn-outline-primary:hover,
+    a.btn-outline-primary:focus,
+    a.btn-outline-primary.active,
+    a.btn-outline-primary.dropdown-toggle.show,
+    .btn-group .btn-outline-primary:hover,
+    .btn-group .btn-outline-primary:focus,
+    .btn-group .btn-outline-primary:active,
+    .btn-group .btn-outline-primary.active,
+    .btn-group .btn-outline-primary.dropdown-toggle.show,
+    .btn-group a.btn-outline-primary:hover,
+    .btn-group a.btn-outline-primary:focus,
+    .btn-group a.btn-outline-primary:active,
+    .btn-group a.btn-outline-primary.active,
+    .btn-group a.btn-outline-primary.dropdown-toggle.show,
+    .btn-group-sm .btn-outline-primary:hover,
+    .btn-group-sm .btn-outline-primary:focus,
+    .btn-group-sm .btn-outline-primary:active,
+    .btn-group-sm .btn-outline-primary.active,
+    .btn-group-sm .btn-outline-primary.dropdown-toggle.show,
+    .btn-group-sm a.btn-outline-primary:hover,
+    .btn-group-sm a.btn-outline-primary:focus,
+    .btn-group-sm a.btn-outline-primary:active,
+    .btn-group-sm a.btn-outline-primary.active,
+    .btn-group-sm a.btn-outline-primary.dropdown-toggle.show,
+    .w-100 .btn-outline-primary:hover,
+    .w-100 .btn-outline-primary:focus,
+    .w-100 .btn-outline-primary:active,
+    .w-100 .btn-outline-primary.active,
+    .w-100 a.btn-outline-primary:hover,
+    .w-100 a.btn-outline-primary:focus,
+    .w-100 a.btn-outline-primary.active,
+    .w-100 a.btn-outline-primary.active,
+    .w-100 a.btn-outline-primary.dropdown-toggle.show {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    /* Focus states */
+    .btn-check:focus + .btn-outline-primary,
+    .btn-outline-primary:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    .btn-warning {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-warning:hover,
+    .btn-warning:focus,
+    a.btn-warning:hover,
+    a.btn-warning:focus,
+    .btn-group .btn-warning:hover,
+    .btn-group .btn-warning:focus,
+    .btn-group a.btn-warning:hover,
+    .btn-group a.btn-warning:focus {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-warning:active,
+    a.btn-warning:active,
+    .btn-group .btn-warning:active,
+    .btn-group a.btn-warning:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-check:focus + .btn-warning,
+    .btn-warning:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    .btn-secondary {
+        background-color: var(--secondary-action-color);
+        color: var(--theme-contrast-color);
+        border-color: var(--border-color);
+    }
+    .btn-secondary:hover {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel {
+        background-color: var(--panel-bg);
+        border: var(--border-width) solid var(--border-color);
+        border-radius: 1rem;
+        box-shadow: var(--shadow-offset) var(--shadow-offset) 0px
+            var(--border-color);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* Ensures children conform to rounded corners */
+    }
+
+    .panel-header {
+        padding: 0.75rem 1.25rem;
+        border-bottom: var(--border-width) solid var(--border-color);
+        background-color: var(--theme-accent-color);
+    }
+    .panel-header h5,
+    .panel-header h4 {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel-body {
+        padding: 1rem;
+        flex-grow: 1;
+    }
+</style>
+{% endblock %} {% block content %}
+<div class="container mt-4">
+    <h1>Manage Participants - {{ trip.name }}</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %}
+    <div
+        class="alert alert-{{ 'danger' if category == 'error' else 'success' if category == 'success' else 'info' }}"
+        role="alert"
+    >
+        {{ message }}
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
+
+    <!-- Sync Button -->
+    <div class="panel mb-3">
+        <div class="panel-body">
+            <h5 class="card-title">Synchronize Linked Participants</h5>
+            <p class="card-text">
+                <small class="text-muted">
+                    This will scan all expense records and update any references
+                    to linked unregistered participants to show the registered
+                    user's name instead of "unregistered_{name}".
+                </small>
+            </p>
+            <form method="POST" class="d-inline">
+                <input
+                    type="hidden"
+                    name="action"
+                    value="sync_linked_participants"
+                />
+                <button type="submit" class="btn btn-warning" id="syncBtn">
+                    <i class="fas fa-sync-alt me-2"></i>Synchronize Linked
+                    Participants
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Unified Add Participant Section -->
+    <div class="panel mb-4">
+        <div class="panel-header">
+            <h5>Add Participant</h5>
+        </div>
+        <div class="panel-body">
+            <form method="POST" id="addParticipantForm">
+                <input
+                    type="hidden"
+                    name="action"
+                    value="add_participant"
+                    id="participantAction"
+                />
+                <div class="form-group">
+                    <label for="participantInput"
+                        >Participant Name or Email:</label
+                    >
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="participantInput"
+                        name="participant_input"
+                        placeholder="Enter name or email"
+                        required
+                    />
+                    <small class="form-text text-muted"
+                        >Enter an email to add an existing user, or a name to
+                        add a new participant</small
+                    >
+                </div>
+                <button
+                    type="submit"
+                    class="btn btn-primary mt-3"
+                    id="addParticipantBtn"
+                >
+                    Add Participant
+                </button>
+                <div id="participantFeedback" class="mt-2"></div>
+            </form>
+        </div>
+    </div>
+
+    <div class="panel mb-4">
+        <div class="panel-header">
+            <h5>Registered Participants</h5>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for participant in participants %}
+                    <tr>
+                        <td>{{ participant.name }}</td>
+                        <td>{{ participant.email }}</td>
+                        <td>
+                            <form method="POST" class="d-inline">
+                                <input
+                                    type="hidden"
+                                    name="action"
+                                    value="remove_registered"
+                                />
+                                <input
+                                    type="hidden"
+                                    name="user_id"
+                                    value="{{ participant.id }}"
+                                />
+                                <button
+                                    type="submit"
+                                    class="btn btn-sm btn-danger"
+                                >
+                                    Remove
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            No registered participants added yet
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h5>Unregistered Participants</h5>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for name in unregistered_participants %}
+                    <tr>
+                        <td>{{ name }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-primary dropdown-toggle"
+                                    data-bs-toggle="dropdown"
+                                >
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <button
+                                            type="button"
+                                            class="dropdown-item link-participant-btn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#linkModal"
+                                            data-name="{{ name }}"
+                                        >
+                                            Link to User
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <form method="POST">
+                                            <input
+                                                type="hidden"
+                                                name="action"
+                                                value="remove_unregistered"
+                                            />
+                                            <input
+                                                type="hidden"
+                                                name="name"
+                                                value="{{ name }}"
+                                            />
+                                            <button
+                                                type="submit"
+                                                class="dropdown-item text-danger"
+                                            >
+                                                Remove
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="2" class="text-center">
+                            No unregistered participants added yet
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Single Link Modal -->
+    <div
+        class="modal fade"
+        id="linkModal"
+        tabindex="-1"
+        aria-labelledby="linkModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="linkModalLabel">
+                        Link Participant to User
+                    </h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">
+                    <div
+                        id="linkModalAlert"
+                        class="alert d-none"
+                        role="alert"
+                    ></div>
+                    <form method="POST" id="linkForm">
+                        <input
+                            type="hidden"
+                            name="action"
+                            value="link_participant"
+                        />
+                        <input type="hidden" name="name" id="participantName" />
+                        <div class="form-group">
+                            <label for="email_link">User Email:</label>
+                            <input
+                                type="email"
+                                class="form-control"
+                                id="email_link"
+                                name="email"
+                                required
+                            />
+                        </div>
+                        <div class="form-group mt-3">
+                            <label
+                                >Or select a registered user from this
+                                trip:</label
+                            >
+                            <div
+                                class="list-group"
+                                id="registeredUsersList"
+                                style="max-height: 200px; overflow-y: auto"
+                            >
+                                {% for user in all_registered_users %}
+                                <button
+                                    type="button"
+                                    class="list-group-item list-group-item-action"
+                                    onclick="selectUser('{{ user.email }}')"
+                                >
+                                    {{ user.name }} ({{ user.email }})
+                                </button>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="mt-3 text-end">
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                                id="linkSubmitBtn"
+                            >
+                                Link User
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a
+            href="{{ url_for('trips.view_trip', trip_id=trip.id) }}"
+            class="btn btn-secondary"
+            >Back to Trip</a
+        >
+    </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+    // Global variable to store the current participant name
+    let currentParticipantName = "";
+
+    // Function to set participant name when modal is triggered
+    function setParticipantName(name) {
+        console.log("=== setParticipantName called ===");
+        console.log("Input name:", name);
+        console.log("Type of name:", typeof name);
+        console.log("Name length:", name ? name.length : 0);
+        console.log("Name is null:", name === null);
+        console.log("Name is undefined:", name === undefined);
+        console.log("Name is empty string:", name === "");
+
+        // Store the participant name in a global variable
+        currentParticipantName = name;
+        console.log("Stored in global variable:", currentParticipantName);
+
+        // Set the modal title
+        const modalTitle = document.getElementById("linkModalLabel");
+        if (modalTitle) {
+            if (name && name.trim() !== "") {
+                modalTitle.textContent = "Link " + name + " to User";
+            } else {
+                modalTitle.textContent = "Link Participant to User";
+            }
+            console.log("Modal title set to:", modalTitle.textContent);
+        }
+
+        // Set the hidden input field value
+        const participantNameInput = document.getElementById("participantName");
+        if (participantNameInput) {
+            participantNameInput.value = name || "";
+            console.log(
+                "Set hidden input value to:",
+                participantNameInput.value,
+            );
+        } else {
+            console.error("participantName input not found");
+        }
+
+        // Clear any previous alerts
+        const alert = document.getElementById("linkModalAlert");
+        if (alert) {
+            alert.classList.add("d-none");
+            console.log("Cleared previous alerts");
+        }
+
+        // Clear email input
+        const emailInput = document.getElementById("email_link");
+        if (emailInput) {
+            emailInput.value = "";
+            console.log("Cleared email input");
+        }
+        console.log("=== setParticipantName completed ===");
+    }
+
+    // Function to select a user from the list
+    function selectUser(email) {
+        console.log("=== selectUser called ===");
+        console.log("Selected email:", email);
+        const emailInput = document.getElementById("email_link");
+        if (emailInput) {
+            emailInput.value = email;
+            console.log("Set email input to:", emailInput.value);
+        }
+        console.log("=== selectUser completed ===");
+    }
+
+    // Handle form submission via direct event attachment
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("=== DOMContentLoaded fired ===");
+
+        // Add event listener for link participant buttons
+        const linkButtons = document.querySelectorAll(".link-participant-btn");
+        linkButtons.forEach((button) => {
+            button.addEventListener("click", function () {
+                const name = this.getAttribute("data-name");
+                setParticipantName(name);
+            });
+        });
+
+        // Handle unified add participant form
+        const addForm = document.getElementById("addParticipantForm");
+        if (addForm) {
+            addForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const input = document.getElementById("participantInput");
+                const feedback = document.getElementById("participantFeedback");
+                const submitBtn = document.getElementById("addParticipantBtn");
+
+                const participantInput = input.value.trim();
+
+                if (!participantInput) {
+                    feedback.innerHTML =
+                        '<div class="alert alert-danger">Please enter a name or email</div>';
+                    return;
+                }
+
+                // Disable button and show loading
+                submitBtn.disabled = true;
+                submitBtn.innerHTML =
+                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Adding...';
+
+                // Send AJAX request
+                fetch(window.location.href, {
+                    method: "POST",
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                    body: JSON.stringify({
+                        action: "add_participant",
+                        participant_input: participantInput,
+                    }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            feedback.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
+                            // Clear input
+                            input.value = "";
+                            // Reload page after short delay
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            feedback.innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = "Add Participant";
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        feedback.innerHTML =
+                            '<div class="alert alert-danger">An error occurred. Please try again.</div>';
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = "Add Participant";
+                    });
+            });
+        }
+
+        // Handle sync button
+        const syncBtn = document.getElementById("syncBtn");
+        if (syncBtn) {
+            syncBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                if (
+                    !confirm(
+                        'Are you sure you want to synchronize all linked participant data? This will scan all expense records and update any references to show registered user names instead of "unregistered_{name}".\n\nThis operation cannot be undone.',
+                    )
+                ) {
+                    return;
+                }
+
+                // Show loading state
+                const originalHtml = syncBtn.innerHTML;
+                syncBtn.innerHTML =
+                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Scanning and Updating...';
+                syncBtn.disabled = true;
+
+                // Send AJAX request
+                fetch(
+                    `${window.location.href.replace("/manage-participants", "")}/sync-linked-participants`,
+                    {
+                        method: "POST",
+                        credentials: "same-origin",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-Requested-With": "XMLHttpRequest",
+                        },
+                        body: JSON.stringify({}),
+                    },
+                )
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            // Show success message with details
+                            const alertDiv = document.createElement("div");
+                            alertDiv.className =
+                                "alert alert-success alert-dismissible fade show mt-3";
+                            alertDiv.innerHTML = `
+                        <strong>Success!</strong> ${data.message}
+                        ${data.updated_expenses ? `<br>Updated ${data.updated_expenses} expense records.` : ""}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    `;
+                            syncBtn.closest(".panel").after(alertDiv);
+
+                            // Reload page after short delay
+                            setTimeout(() => {
+                                location.reload();
+                            }, 3000);
+                        } else {
+                            // Show error message
+                            const alertDiv = document.createElement("div");
+                            alertDiv.className =
+                                "alert alert-danger alert-dismissible fade show mt-3";
+                            alertDiv.innerHTML = `
+                        <strong>Error:</strong> ${data.message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    `;
+                            syncBtn.closest(".panel").after(alertDiv);
+
+                            // Restore button
+                            syncBtn.innerHTML = originalHtml;
+                            syncBtn.disabled = false;
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        // Show error message
+                        const alertDiv = document.createElement("div");
+                        alertDiv.className =
+                            "alert alert-danger alert-dismissible fade show mt-3";
+                        alertDiv.innerHTML = `
+                    <strong>Error:</strong> An error occurred during synchronization. Please try again.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                        syncBtn.closest(".panel").after(alertDiv);
+
+                        // Restore button
+                        syncBtn.innerHTML = originalHtml;
+                        syncBtn.disabled = false;
+                    });
+            });
+        }
+
+        const linkForm = document.getElementById("linkForm");
+        console.log("linkForm element:", linkForm);
+        if (linkForm) {
+            linkForm.addEventListener("submit", function (e) {
+                console.log("=== Form submit event triggered ===");
+                e.preventDefault();
+                console.log("Default prevented");
+
+                // Get form data directly from elements within the link form
+                const actionInput = linkForm.querySelector(
+                    'input[name="action"]',
+                );
+                const action = actionInput ? actionInput.value : null;
+
+                const emailInput = document.getElementById("email_link");
+                const email = emailInput ? emailInput.value : null;
+
+                // Get participant name from multiple sources for debugging
+                const participantNameInput =
+                    document.getElementById("participantName");
+                const hiddenName = participantNameInput
+                    ? participantNameInput.value
+                    : null;
+
+                // Use the global variable for participant name as primary source
+                const name = currentParticipantName;
+
+                console.log("Form data collected:");
+                console.log("- action:", action);
+                console.log("- email:", email);
+                console.log("- name (global variable):", name);
+                console.log("- name (hidden input):", hiddenName);
+                console.log(
+                    "- Global currentParticipantName:",
+                    currentParticipantName,
+                );
+                console.log("- Name type:", typeof name);
+                console.log("- Name value:", JSON.stringify(name));
+
+                // Validate that we have a name
+                if (!name || name.trim() === "") {
+                    console.error("Participant name is missing or empty");
+                    console.error("- name:", name);
+                    console.error("- typeof name:", typeof name);
+                    console.error("- name === null:", name === null);
+                    console.error("- name === undefined:", name === undefined);
+                    console.error("- name === '':", name === "");
+                    console.error(
+                        "- name.trim() === '':",
+                        name && name.trim() === "",
+                    );
+
+                    const alert = document.getElementById("linkModalAlert");
+                    if (alert) {
+                        alert.className = "alert alert-danger d-block";
+                        alert.textContent =
+                            "Participant name is missing. Please try again.";
+                    }
+                    console.log(
+                        "=== Form submission aborted - missing name ===",
+                    );
+                    return;
+                }
+
+                // Validate email is provided
+                if (!email) {
+                    console.error("Email is missing");
+                    const alert = document.getElementById("linkModalAlert");
+                    if (alert) {
+                        alert.className = "alert alert-danger d-block";
+                        alert.textContent =
+                            "Please enter an email address or select a user from the list.";
+                    }
+                    console.log(
+                        "=== Form submission aborted - missing email ===",
+                    );
+                    return;
+                }
+
+                console.log("Validation passed, proceeding with AJAX request");
+
+                // Get submit button
+                const linkSubmitBtn = document.getElementById("linkSubmitBtn");
+
+                // Disable submit button and show loading state
+                if (linkSubmitBtn) {
+                    linkSubmitBtn.disabled = true;
+                    linkSubmitBtn.innerHTML =
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Linking...';
+                    console.log(
+                        "Submit button disabled and set to loading state",
+                    );
+                }
+
+                // Send AJAX request
+                console.log("Sending AJAX request...");
+                fetch(window.location.href, {
+                    method: "POST",
+                    credentials: "same-origin", // Include cookies with the request
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                    body: JSON.stringify({
+                        action: action,
+                        name: name,
+                        email: email,
+                    }),
+                })
+                    .then((response) => {
+                        console.log("Response received:", response);
+                        console.log("Response status:", response.status);
+                        console.log("Response OK:", response.ok);
+                        // Check if response is successful
+                        if (!response.ok) {
+                            // If not successful, parse the JSON error response
+                            return response.json().then((errorData) => {
+                                console.log("Error data received:", errorData);
+                                throw new Error(JSON.stringify(errorData));
+                            });
+                        }
+                        // If successful, parse the JSON response normally
+                        return response.json();
+                    })
+                    .then((data) => {
+                        console.log("Data received:", data);
+                        const alert = document.getElementById("linkModalAlert");
+
+                        if (data.success) {
+                            console.log("Linking successful");
+                            // Show success message
+                            if (alert) {
+                                alert.className = "alert alert-success d-block";
+                                alert.textContent = data.message;
+                            }
+
+                            // Close modal after a short delay
+                            setTimeout(function () {
+                                console.log("Closing modal and reloading page");
+                                // Try both Bootstrap APIs
+                                if (
+                                    typeof bootstrap !== "undefined" &&
+                                    document.getElementById("linkModal")
+                                ) {
+                                    const modal = bootstrap.Modal.getInstance(
+                                        document.getElementById("linkModal"),
+                                    );
+                                    if (modal) {
+                                        modal.hide();
+                                    }
+                                } else if (
+                                    typeof $ !== "undefined" &&
+                                    $("#linkModal").length
+                                ) {
+                                    $("#linkModal").modal("hide");
+                                }
+
+                                // Reload the page to reflect changes
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            console.log(
+                                "Linking failed with message:",
+                                data.message,
+                            );
+                            // Show error message
+                            if (alert) {
+                                alert.className = "alert alert-danger d-block";
+                                alert.textContent = data.message;
+                            }
+
+                            // Re-enable submit button
+                            if (linkSubmitBtn) {
+                                linkSubmitBtn.disabled = false;
+                                linkSubmitBtn.innerHTML = "Link User";
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error occurred:", error);
+                        // Show error message
+                        const alert = document.getElementById("linkModalAlert");
+                        if (alert) {
+                            alert.className = "alert alert-danger d-block";
+
+                            try {
+                                // Try to parse the error as JSON
+                                const errorData = JSON.parse(error.message);
+                                alert.textContent =
+                                    errorData.message ||
+                                    "An error occurred. Please try again.";
+                            } catch (e) {
+                                // If parsing fails, show a generic error message
+                                alert.textContent =
+                                    "An error occurred. Please try again.";
+                            }
+                        }
+
+                        // Re-enable submit button
+                        if (linkSubmitBtn) {
+                            linkSubmitBtn.disabled = false;
+                            linkSubmitBtn.innerHTML = "Link User";
+                        }
+                    });
+                console.log("=== Form submit event handler completed ===");
+            });
+        } else {
+            console.error("linkForm not found");
+        }
+        console.log("=== DOMContentLoaded handler completed ===");
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,468 @@
+/* Creative Design CSS for Expense Tracker */
+
+/* Futuristic Gradient Background */
+.hero-futuristic {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Animated Particle Background */
+.particle-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  animation: float 6s infinite ease-in-out;
+}
+
+.particle:nth-child(1) {
+  width: 10px;
+  height: 10px;
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.particle:nth-child(2) {
+  width: 15px;
+  height: 15px;
+  top: 60%;
+  left: 80%;
+  animation-delay: 1s;
+}
+
+.particle:nth-child(3) {
+  width: 8px;
+  height: 8px;
+  top: 40%;
+  left: 30%;
+  animation-delay: 2s;
+}
+
+.particle:nth-child(4) {
+  width: 12px;
+  height: 12px;
+  top: 80%;
+  left: 60%;
+  animation-delay: 0.5s;
+}
+
+.particle:nth-child(5) {
+  width: 6px;
+  height: 6px;
+  top: 30%;
+  left: 90%;
+  animation-delay: 1.5s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(20px, 20px) rotate(90deg);
+  }
+  50% {
+    transform: translate(-20px, 20px) rotate(180deg);
+  }
+  75% {
+    transform: translate(-20px, -20px) rotate(270deg);
+  }
+}
+
+/* Holographic Card Effect */
+.holographic-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  transform: perspective(1000px) rotateY(0deg);
+  transition: transform 0.5s ease;
+}
+
+.holographic-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: rotate(45deg);
+  transition: all 0.5s ease;
+}
+
+.holographic-card:hover {
+  transform: perspective(1000px) rotateY(5deg);
+}
+
+.holographic-card:hover::before {
+  transform: rotate(45deg) translate(20%, 20%);
+}
+
+/* 3D Expense Visualization */
+.expense-3d-container {
+  perspective: 1000px;
+  height: 300px;
+  position: relative;
+}
+
+.expense-cube {
+  width: 150px;
+  height: 150px;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: rotate3d 15s infinite linear;
+  margin: 0 auto;
+}
+
+.expense-face {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  backdrop-filter: blur(5px);
+}
+
+.expense-face:nth-child(1) {
+  transform: translateZ(75px);
+  background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+}
+
+.expense-face:nth-child(2) {
+  transform: rotateY(180deg) translateZ(75px);
+  background: linear-gradient(45deg, #4ecdc4, #88d8d0);
+}
+
+.expense-face:nth-child(3) {
+  transform: rotateY(90deg) translateZ(75px);
+  background: linear-gradient(45deg, #45b7d1, #6cbbe8);
+}
+
+.expense-face:nth-child(4) {
+  transform: rotateY(-90deg) translateZ(75px);
+  background: linear-gradient(45deg, #f9ca24, #fcd34d);
+}
+
+.expense-face:nth-child(5) {
+  transform: rotateX(90deg) translateZ(75px);
+  background: linear-gradient(45deg, #6c5ce7, #8a7dff);
+}
+
+.expense-face:nth-child(6) {
+  transform: rotateX(-90deg) translateZ(75px);
+  background: linear-gradient(45deg, #a29bfe, #d6d0ff);
+}
+
+@keyframes rotate3d {
+  0% {
+    transform: rotateX(0) rotateY(0) rotateZ(0);
+  }
+  100% {
+    transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+  }
+}
+
+/* Interactive Expense Tracker */
+.interactive-tracker {
+  position: relative;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+
+.tracker-path {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-50%);
+}
+
+.tracker-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+  width: 0%;
+  transition: width 1s ease;
+}
+
+.tracker-marker {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.tracker-marker:hover {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+.tracker-marker.active {
+  background: #4ecdc4;
+  box-shadow: 0 0 30px #4ecdc4;
+}
+
+.tracker-label {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* Morphing Shapes */
+.morph-shape {
+  width: 100px;
+  height: 100px;
+  margin: 2rem auto;
+  position: relative;
+  animation: morph 8s infinite;
+}
+
+.morph-circle {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  border-radius: 50%;
+  animation: morph 8s infinite;
+}
+
+@keyframes morph {
+  0% {
+    border-radius: 50%;
+    transform: rotate(0deg);
+  }
+  25% {
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    transform: rotate(90deg);
+  }
+  50% {
+    border-radius: 40% 60% 30% 70% / 60% 30% 70% 40%;
+    transform: rotate(180deg);
+  }
+  75% {
+    border-radius: 70% 30% 50% 50% / 30% 60% 40% 70%;
+    transform: rotate(270deg);
+  }
+  100% {
+    border-radius: 50%;
+    transform: rotate(360deg);
+  }
+}
+
+/* Glowing Buttons */
+.glow-button {
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 15px 30px;
+  border-radius: 50px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  margin: 10px;
+}
+
+.glow-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: all 0.6s ease;
+}
+
+.glow-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.glow-button:hover::before {
+  left: 100%;
+}
+
+.glow-button:active {
+  transform: translateY(0);
+}
+
+/* Holographic Text Effect */
+.holo-text {
+  position: relative;
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.holo-text::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: #4ecdc4;
+  z-index: -1;
+  filter: blur(10px);
+  opacity: 0.7;
+}
+
+/* Floating Cards */
+.floating-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 2rem;
+  margin: 1rem 0;
+  transform: translateY(0);
+  animation: floatCard 3s ease-in-out infinite;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.floating-card:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.floating-card:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.floating-card:nth-child(3) {
+  animation-delay: 1s;
+}
+
+@keyframes floatCard {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Neon Glow Effect */
+.neon-glow {
+  color: white;
+  text-shadow: 
+    0 0 5px #fff,
+    0 0 10px #fff,
+    0 0 20px #ff6b6b,
+    0 0 40px #ff6b6b,
+    0 0 80px #ff6b6b;
+  animation: neonPulse 2s infinite alternate;
+}
+
+@keyframes neonPulse {
+  from {
+    text-shadow: 
+      0 0 5px #fff,
+      0 0 10px #fff,
+      0 0 20px #ff6b6b,
+      0 0 40px #ff6b6b,
+      0 0 80px #ff6b6b;
+  }
+  to {
+    text-shadow: 
+      0 0 10px #fff,
+      0 0 20px #fff,
+      0 0 30px #ff6b6b,
+      0 0 50px #ff6b6b,
+      0 0 70px #ff6b6b;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-futuristic {
+    padding: 2rem 1rem;
+  }
+  
+  .holographic-card {
+    margin: 1rem;
+  }
+  
+  .glow-button {
+    padding: 12px 24px;
+    font-size: 0.9rem;
+  }
+  
+  .expense-cube {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .expense-face {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .expense-face:nth-child(1) {
+    transform: translateZ(50px);
+  }
+  
+  .expense-face:nth-child(2) {
+    transform: rotateY(180deg) translateZ(50px);
+  }
+  
+  .expense-face:nth-child(3) {
+    transform: rotateY(90deg) translateZ(50px);
+  }
+  
+  .expense-face:nth-child(4) {
+    transform: rotateY(-90deg) translateZ(50px);
+  }
+  
+  .expense-face:nth-child(5) {
+    transform: rotateX(90deg) translateZ(50px);
+  }
+  
+  .expense-face:nth-child(6) {
+    transform: rotateX(-90deg) translateZ(50px);
+  }
+}

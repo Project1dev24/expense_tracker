@@ -1,0 +1,448 @@
+{% extends "base.html" %} {% block title %}Settlements for {{ trip.name }} -
+Trip Expense Tracker{% endblock %} {% block styles %}
+<style>
+    :root {
+        --body-bg: #f4f1ea;
+        --panel-bg: #ffffff;
+        --border-color: #000000;
+        --theme-accent-color: #aec6cf; /* Default: Pastel Blue */
+        --theme-contrast-color: #000000; /* Default for light accent */
+        --secondary-action-color: #85a0aa; /* Default: Darkened Pastel Blue */
+        --border-width: 2px;
+        --shadow-offset: 5px;
+    }
+
+    body {
+        background-color: var(--body-bg);
+        font-family:
+            -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+            Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+            "Segoe UI Symbol";
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .fw-bold {
+        font-weight: 700 !important;
+        color: var(--border-color);
+    }
+
+    .btn {
+        border: var(--border-width) solid var(--border-color);
+        box-shadow: 3px 3px 0px var(--border-color);
+        border-radius: 0.5rem;
+        font-weight: 700;
+        transition: all 0.15s ease-out;
+        padding: 0.5rem 1rem;
+    }
+
+    .btn:hover {
+        /* No specific hover transform/shadow */
+    }
+
+    .btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0px var(--border-color);
+    }
+
+    .btn-primary {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-primary:hover,
+    .btn-primary:focus,
+    a.btn-primary:hover,
+    a.btn-primary:focus,
+    .btn-group .btn-primary:hover,
+    .btn-group .btn-primary:focus,
+    .btn-group a.btn-primary:hover,
+    .btn-group a.btn-primary:focus {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important; /* Darker hover effect */
+        border-color: var(--border-color) !important;
+    }
+    .btn-primary:active,
+    a.btn-primary:active,
+    .btn-group .btn-primary:active,
+    .btn-group a.btn-primary:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    /* Enhanced styles for outline buttons to maintain theme colors */
+    .btn-outline-primary {
+        color: var(--border-color) !important;
+        border-color: var(--border-color) !important;
+        background-color: transparent !important;
+    }
+
+    /* All possible states for btn-outline-primary */
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus,
+    .btn-outline-primary.active,
+    .btn-outline-primary.dropdown-toggle.show,
+    a.btn-outline-primary:hover,
+    a.btn-outline-primary:focus,
+    a.btn-outline-primary.active,
+    a.btn-outline-primary.dropdown-toggle.show,
+    .btn-group .btn-outline-primary:hover,
+    .btn-group .btn-outline-primary:focus,
+    .btn-group .btn-outline-primary:active,
+    .btn-group .btn-outline-primary.active,
+    .btn-group .btn-outline-primary.dropdown-toggle.show,
+    .btn-group a.btn-outline-primary:hover,
+    .btn-group a.btn-outline-primary:focus,
+    .btn-group a.btn-outline-primary:active,
+    .btn-group a.btn-outline-primary.active,
+    .btn-group a.btn-outline-primary.dropdown-toggle.show,
+    .btn-group-sm .btn-outline-primary:hover,
+    .btn-group-sm .btn-outline-primary:focus,
+    .btn-group-sm .btn-outline-primary:active,
+    .btn-group-sm .btn-outline-primary.active,
+    .btn-group-sm .btn-outline-primary.dropdown-toggle.show,
+    .btn-group-sm a.btn-outline-primary:hover,
+    .btn-group-sm a.btn-outline-primary:focus,
+    .btn-group-sm a.btn-outline-primary:active,
+    .btn-group-sm a.btn-outline-primary.active,
+    .btn-group-sm a.btn-outline-primary.dropdown-toggle.show,
+    .w-100 .btn-outline-primary:hover,
+    .w-100 .btn-outline-primary:focus,
+    .w-100 .btn-outline-primary:active,
+    .w-100 .btn-outline-primary.active,
+    .w-100 a.btn-outline-primary:hover,
+    .w-100 a.btn-outline-primary:focus,
+    .w-100 a.btn-outline-primary.active,
+    .w-100 a.btn-outline-primary.active,
+    .w-100 a.btn-outline-primary.dropdown-toggle.show {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    /* Focus states */
+    .btn-check:focus + .btn-outline-primary,
+    .btn-outline-primary:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    .btn-warning {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-warning:hover,
+    .btn-warning:focus,
+    a.btn-warning:hover,
+    a.btn-warning:focus,
+    .btn-group .btn-warning:hover,
+    .btn-group .btn-warning:focus,
+    .btn-group a.btn-warning:hover,
+    .btn-group a.btn-warning:focus {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-warning:active,
+    a.btn-warning:active,
+    .btn-group .btn-warning:active,
+    .btn-group a.btn-warning:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-check:focus + .btn-warning,
+    .btn-warning:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    .btn-secondary {
+        background-color: var(--secondary-action-color);
+        color: var(--theme-contrast-color);
+        border-color: var(--border-color);
+    }
+    .btn-secondary:hover {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel {
+        background-color: var(--panel-bg);
+        border: var(--border-width) solid var(--border-color);
+        border-radius: 1rem;
+        box-shadow: var(--shadow-offset) var(--shadow-offset) 0px
+            var(--border-color);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* Ensures children conform to rounded corners */
+    }
+
+    .panel-header {
+        padding: 0.75rem 1.25rem;
+        border-bottom: var(--border-width) solid var(--border-color);
+        background-color: var(--theme-accent-color);
+    }
+    .panel-header h5,
+    .panel-header h4 {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel-body {
+        padding: 1rem;
+        flex-grow: 1;
+    }
+
+    .trip-name-badge {
+        font-size: 1rem;
+        padding: 0.3em 0.6em;
+        border: var(--border-width) solid transparent; /* Add transparent border for consistency */
+                    transition: all 0.15s ease-out; /* Add transition for smooth effect */
+                    background-color: var(--theme-accent-color);        color: var(--theme-contrast-color);
+    }
+    .trip-name-badge:hover {
+        background-color: var(--secondary-action-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+</style>
+{% endblock %} {% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1 class="mb-2">Settlements</h1>
+        <p class="text-muted">
+            <a href="{{ url_for('trips.view_trip', trip_id=trip.id) }}"
+                class="badge text-decoration-none trip-name-badge"
+                >{{ trip.name }}</a
+            >
+            <i class="fas fa-calendar ms-3 me-1"></i>
+            {{ trip.start_date.strftime('%d %b %Y') }} - {{
+            trip.end_date.strftime('%d %b %Y') }}
+        </p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a
+            href="{{ url_for('trips.export_pdf', trip_id=trip.id) }}"
+            class="btn btn-primary"
+        >
+            <i class="fas fa-file-pdf me-2"></i>Export as PDF
+        </a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-header">
+                <h5 class="mb-0">Settlement Summary</h5>
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    This report shows the optimal way to settle all debts with
+                    the minimum number of transactions.
+                </div>
+
+                {% if settlements %}
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for settlement in settlements %}
+                            <tr>
+                                <td>
+                                    {% if
+                                    (settlement.from_user|string).startswith('unregistered_')
+                                    %} {{ user_map.get(settlement.from_user,
+                                    (settlement.from_user|string)|replace('unregistered_',
+                                    '')) }}
+                                    <span class="badge bg-info"
+                                        >unregistered</span
+                                    >
+                                    {% else %} {{
+                                    user_map.get(settlement.from_user,
+                                    'Unknown') }} {% endif %}
+                                </td>
+                                <td>
+                                    {% if
+                                    (settlement.to_user|string).startswith('unregistered_')
+                                    %} {{ user_map.get(settlement.to_user,
+                                    (settlement.to_user|string)|replace('unregistered_',
+                                    '')) }}
+                                    <span class="badge bg-info"
+                                        >unregistered</span
+                                    >
+                                    {% else %} {{
+                                    user_map.get(settlement.to_user, 'Unknown')
+                                    }} {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    ₹{{ settlement.amount|round(2) }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center p-4">
+                    <h4>Everyone is settled up!</h4>
+                    <p>There are no outstanding balances in this trip.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-header">
+                <h5 class="mb-0">Individual Balances</h5>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Participant</th>
+                                <th>Total Paid</th>
+                                <th>Total Share</th>
+                                <th>Settlement Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for participant_id, balance in balances.items()
+                            %}
+                            <tr>
+                                <td>
+                                    {% if
+                                    (participant_id|string).startswith('unregistered_')
+                                    %} {{ user_map.get(participant_id,
+                                    (participant_id|string)|replace('unregistered_',
+                                    '')) }}
+                                    <span class="badge bg-info"
+                                        >unregistered</span
+                                    >
+                                    {% else %} {{ user_map.get(participant_id,
+                                    'Unknown') }} {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    ₹{{ total_paid.get(participant_id,
+                                    0)|round(2) }}
+                                </td>
+                                <td class="text-end">
+                                    ₹{{ total_share.get(participant_id,
+                                    0)|round(2) }}
+                                </td>
+                                <td class="text-end">
+                                    {% if balance > 0 %}
+                                    <span class="text-success"
+                                        >{{ user_map.get(participant_id,
+                                        'Unknown') }} should receive ₹{{
+                                        balance|round(2) }}</span
+                                    >
+                                    {% elif balance < 0 %}
+                                    <span class="text-danger"
+                                        >{{ user_map.get(participant_id,
+                                        'Unknown') }} should give ₹{{ (balance *
+                                        -1)|round(2) }}</span
+                                    >
+                                    {% else %}
+                                    <span class="text-muted">Settled up</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-header">
+                <h5 class="mb-0">Expense Breakdown</h5>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Paid By</th>
+                                <th>Split Method</th>
+                                <th>Participants</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for expense in expenses %}
+                            <tr>
+                                <td>{{ expense.date.strftime('%d %b %Y') }}</td>
+                                <td>{{ expense.description }}</td>
+                                <td class="text-end">
+                                    ₹{{ expense.amount|round(2) }}
+                                </td>
+                                <td>
+                                    {% if
+                                    (expense.payer_id|string).startswith('unregistered_')
+                                    %} {{ user_map.get(expense.payer_id,
+                                    (expense.payer_id|string)|replace('unregistered_',
+                                    '')) }}
+                                    <span class="badge bg-info"
+                                        >unregistered</span
+                                    >
+                                    {% elif expense.payer_id == 'group_everyone'
+                                    %} Everyone (Group Payment) {% else %} {{
+                                    user_map.get(expense.payer_id|string,
+                                    'Unknown') }} {% endif %}
+                                </td>
+                                <td>
+                                    {% if expense.split_method == 'equal' %}
+                                    Equal {% elif expense.split_method ==
+                                    'exact' %} Exact {% elif
+                                    expense.split_method == 'itemized' %}
+                                    Itemized {% endif %}
+                                </td>
+                                <td>
+                                    {% for participant_id in
+                                    expense.get_participants_list() %}
+                                    <span class="badge bg-primary me-1"
+                                        >{{ user_map.get(participant_id,
+                                        'Unknown') }}</span
+                                    >
+                                    {% endfor %} {% set
+                                    unregistered_participants =
+                                    expense.get_unregistered_participants() %}
+                                    {% for name in unregistered_participants %}
+                                    <span class="badge bg-info me-1"
+                                        >{{ name|title }}</span
+                                    >
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

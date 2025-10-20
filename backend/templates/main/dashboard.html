@@ -1,0 +1,1062 @@
+{% extends "base.html" %} {% block title %}Dashboard - Trip Expense Tracker{%
+endblock %} {% block content %}
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="display-4 fw-bold mb-0">Dashboard</h1>
+        <p class="lead text-muted">
+            Welcome back, <span class="fw-bold">{{ current_user.name }}</span>!
+        </p>
+    </div>
+    <div class="d-flex align-items-center">
+        <a href="#" class="btn btn-secondary d-flex align-items-center me-2" id="syncBtn">
+            <i class="fas fa-sync"></i>
+            <span class="d-none d-md-inline ms-2">Sync</span>
+        </a>
+        <a
+            href="{{ url_for('trips.add_trip') }}"
+            class="btn btn-primary d-flex align-items-center"
+        >
+            <i class="fas fa-plus"></i>
+            <span class="d-none d-md-inline ms-2">New Trip</span>
+        </a>
+    </div>
+</div>
+
+<!-- Theme Selector -->
+<div class="theme-selector mb-5">
+    <small class="me-3 fw-bold">Theme:</small>
+    <button
+        class="theme-dot"
+        style="background-color: #aec6cf"
+        data-color="#AEC6CF"
+    ></button>
+    <!-- Pastel Blue -->
+    <button
+        class="theme-dot"
+        style="background-color: #b2d8b2"
+        data-color="#B2D8B2"
+    ></button>
+    <!-- Tea Green -->
+    <button
+        class="theme-dot"
+        style="background-color: #343434"
+        data-color="#343434"
+    ></button>
+    <!-- Off-Black -->
+    <button
+        class="theme-dot"
+        style="background-color: #f5f5f5"
+        data-color="#F5F5F5"
+    ></button>
+    <!-- White -->
+</div>
+
+<!-- Summary Stats Cards -->
+<div class="row mb-5">
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="stat-card h-100">
+            <div class="stat-card-info">
+                <h6 class="mb-1">Balance</h6>
+                {% if total_balance > 0 %}
+                <h3 class="display-6 fw-bold mb-0">
+                    ₹{{ total_balance|round(2) }}
+                </h3>
+                <p class="small mb-0">You will receive</p>
+                {% elif total_balance < 0 %}
+                <h3 class="display-6 fw-bold mb-0">
+                    ₹{{ (total_balance * -1)|round(2) }}
+                </h3>
+                <p class="small mb-0">You need to pay</p>
+                {% else %}
+                <h3 class="display-6 fw-bold mb-0">₹0.00</h3>
+                <p class="small mb-0">All settled up</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="stat-card h-100">
+            <div class="stat-card-info">
+                <h6 class="mb-1">Total Spent</h6>
+                <h3 class="display-6 fw-bold mb-0">
+                    ₹{{ total_spent|round(2) }}
+                </h3>
+                <p class="small mb-0">Across all trips</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-12 mb-4">
+        <div class="stat-card h-100">
+            <div class="stat-card-info">
+                <h6 class="mb-1">Total Trips</h6>
+                <h3 class="display-6 fw-bold mb-0">
+                    {{ total_trips if total_trips is defined else
+                    recent_trips|length if recent_trips else 0 }}
+                </h3>
+                <p class="small mb-0">Completed & ongoing</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <!-- Trips Section -->
+        <div class="panel h-100">
+            <div class="panel-header">
+                <h5 class="fw-bold mb-0">Recent Trips</h5>
+            </div>
+            <div
+                class="panel-body d-flex align-items-center justify-content-center align-items-lg-stretch"
+            >
+                {% if recent_trips %} {% if recent_trips|length > 1 %}
+                <div class="embla w-100" id="tripsCarousel">
+                    <div class="embla__viewport">
+                        <div class="embla__container">
+                            {% for trip in recent_trips %}
+                            <div class="embla__slide">
+                                <div class="trip-card h-100">
+                                    <div
+                                        class="d-flex justify-content-between align-items-start"
+                                    >
+                                        <h5 class="fw-bold">{{ trip.name }}</h5>
+                                        <span class="badge bg-dark"
+                                            >{{ trip.expenses.count() }}
+                                            expenses</span
+                                        >
+                                    </div>
+                                    <p class="small text-muted my-2">
+                                        {{ trip.start_date.strftime('%d %b %Y')
+                                        }} - {{ trip.end_date.strftime('%d %b
+                                        %Y') }}
+                                    </p>
+                                    <div class="trip-card-footer mt-auto">
+                                        <a
+                                            href="{{ url_for('trips.view_trip', trip_id=trip.id) }}"
+                                            class="btn btn-dark w-100"
+                                            >View Details</a
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% else %} {% set trip = recent_trips[0] %}
+                <div class="trip-card h-100">
+                    <div
+                        class="d-flex justify-content-between align-items-start"
+                    >
+                        <h5 class="fw-bold">{{ trip.name }}</h5>
+                        <span class="badge bg-dark"
+                            >{{ trip.expenses.count() }} expenses</span
+                        >
+                    </div>
+                    <p class="small text-muted my-2">
+                        {{ trip.start_date.strftime('%d %b %Y') }} - {{
+                        trip.end_date.strftime('%d %b %Y') }}
+                    </p>
+                    <div class="trip-card-footer mt-auto">
+                        <a
+                            href="{{ url_for('trips.view_trip', trip_id=trip.id) }}"
+                            class="btn btn-dark w-100"
+                            >View Details</a
+                        >
+                    </div>
+                </div>
+                {% endif %} {% else %}
+                <div
+                    class="text-center p-5 h-100 d-flex flex-column justify-content-center"
+                >
+                    <p class="h5 mb-3">You don't have any trips yet.</p>
+                    <a
+                        href="{{ url_for('trips.add_trip') }}"
+                        class="btn btn-primary"
+                        >Create your first trip</a
+                    >
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <!-- Expenses Section -->
+        <div class="panel h-100 d-flex flex-column">
+            <div class="panel-header">
+                <h5 class="fw-bold mb-0">Recent Activity</h5>
+            </div>
+            <div class="panel-body p-0 flex-grow-1 d-flex flex-column">
+                {% if recent_expenses %}
+                <div
+                    class="list-group list-group-flush activity-list flex-grow-1"
+                >
+                    {% for item in recent_expenses %}
+                    <div class="list-group-item">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3 activity-icon">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <p class="fw-bold mb-0">
+                                    {{ item.expense.description }}
+                                </p>
+                                <small class="text-muted"
+                                    >in {{ item.trip.name }}</small
+                                >
+                            </div>
+                            <div class="ms-auto text-end">
+                                <p class="fw-bold mb-0">
+                                    ₹{{ item.expense.amount|round(2) }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div
+                    class="text-center p-5 d-flex flex-column justify-content-center align-items-center flex-grow-1"
+                >
+                    <p>No recent activity.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row">
+    <div class="col-lg-5 col-md-12 mb-4">
+        <div class="panel h-100">
+            <div class="panel-header">
+                <h5 class="fw-bold mb-0">Spending by Category</h5>
+            </div>
+            <div class="chart-filters">
+                <select id="category-trip-filter" class="form-select">
+                    <option value="all" selected>All Trips</option>
+                    {% for trip in trips %}
+                    <option value="{{ trip.id }}">{{ trip.name }}</option>
+                    {% endfor %}
+                </select>
+                <select id="category-month-filter" class="form-select">
+                    <option value="all">All Time</option>
+                    {% for month in months_for_filter %}
+                    <option value="{{ month.value }}" {% if loop.first %}selected{% endif %}>{{ month.text }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="panel-body d-flex flex-column">
+                <div
+                    id="categoryPieChartContainer"
+                    class="chart-container flex-grow-1 d-flex align-items-center justify-content-center"
+                    data-category-labels="{{ category_labels|tojson }}"
+                    data-category-values="{{ category_values|tojson }}"
+                >
+                    <canvas id="categoryPieChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-7 col-md-12 mb-4">
+        <div class="panel h-100">
+            <div class="panel-header">
+                <h5 class="fw-bold mb-0">Spending History</h5>
+            </div>
+            <div class="chart-filters">
+                <select id="history-month-filter" class="form-select">
+                    <option value="all" selected>All Time</option>
+                    {% for month in months_for_filter %}
+                    <option value="{{ month.value }}">{{ month.text }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="panel-body d-flex flex-column">
+                <div
+                    id="spendingLineChartContainer"
+                    class="chart-container flex-grow-1 d-flex align-items-center justify-content-center"
+                    data-line-labels="{{ line_chart_labels|tojson }}"
+                    data-line-values="{{ line_chart_values|tojson }}"
+                >
+                    <canvas id="spendingLineChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %} {% block styles %}
+<style>
+    :root {
+        --body-bg: #f4f1ea;
+        --panel-bg: #ffffff;
+        --border-color: #000000;
+        --theme-accent-color: #aec6cf; /* Default: Pastel Blue */
+        --theme-contrast-color: #000000; /* Default for light accent */
+        --secondary-action-color: #85a0aa; /* Default: Darkened Pastel Blue */
+        --border-width: 2px;
+        --shadow-offset: 5px;
+        --slide-size: 100%;
+        --slide-spacing: 1rem;
+    }
+
+    body {
+        background-color: var(--body-bg);
+        font-family:
+            -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+            Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+            "Segoe UI Symbol";
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .fw-bold {
+        font-weight: 700 !important;
+        color: var(--border-color);
+    }
+
+    .btn {
+        border: var(--border-width) solid var(--border-color);
+        box-shadow: 3px 3px 0px var(--border-color);
+        border-radius: 0.5rem;
+        font-weight: 700;
+        transition: all 0.15s ease-out;
+        padding: 0.5rem 1rem;
+    }
+
+    .btn:hover {
+        /* No specific hover transform/shadow */
+    }
+
+    .btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0px var(--border-color);
+    }
+
+    .btn-primary {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-primary:hover,
+    .btn-primary:focus,
+    a.btn-primary:hover,
+    a.btn-primary:focus,
+    .btn-group .btn-primary:hover,
+    .btn-group .btn-primary:focus,
+    .btn-group a.btn-primary:hover,
+    .btn-group a.btn-primary:focus {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important; /* Darker hover effect */
+        border-color: var(--border-color) !important;
+    }
+    .btn-primary:active,
+    a.btn-primary:active,
+    .btn-group .btn-primary:active,
+    .btn-group a.btn-primary:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    /* Enhanced styles for outline buttons to maintain theme colors */
+    .btn-outline-primary {
+        color: var(--border-color) !important;
+        border-color: var(--border-color) !important;
+        background-color: transparent !important;
+    }
+
+    /* All possible states for btn-outline-primary */
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus,
+    .btn-outline-primary.active,
+    .btn-outline-primary.dropdown-toggle.show,
+    a.btn-outline-primary:hover,
+    a.btn-outline-primary:focus,
+    a.btn-outline-primary.active,
+    a.btn-outline-primary.dropdown-toggle.show,
+    .btn-group .btn-outline-primary:hover,
+    .btn-group .btn-outline-primary:focus,
+    .btn-group .btn-outline-primary:active,
+    .btn-group .btn-outline-primary.active,
+    .btn-group .btn-outline-primary.dropdown-toggle.show,
+    .btn-group a.btn-outline-primary:hover,
+    .btn-group a.btn-outline-primary:focus,
+    .btn-group a.btn-outline-primary:active,
+    .btn-group a.btn-outline-primary.active,
+    .btn-group a.btn-outline-primary.dropdown-toggle.show,
+    .btn-group-sm .btn-outline-primary:hover,
+    .btn-group-sm .btn-outline-primary:focus,
+    .btn-group-sm .btn-outline-primary:active,
+    .btn-group-sm .btn-outline-primary.active,
+    .btn-group-sm .btn-outline-primary.dropdown-toggle.show,
+    .btn-group-sm a.btn-outline-primary:hover,
+    .btn-group-sm a.btn-outline-primary:focus,
+    .btn-group-sm a.btn-outline-primary:active,
+    .btn-group-sm a.btn-outline-primary.active,
+    .btn-group-sm a.btn-outline-primary.dropdown-toggle.show,
+    .w-100 .btn-outline-primary:hover,
+    .w-100 .btn-outline-primary:focus,
+    .w-100 .btn-outline-primary:active,
+    .w-100 .btn-outline-primary.active,
+    .w-100 a.btn-outline-primary:hover,
+    .w-100 a.btn-outline-primary:focus,
+    .w-100 a.btn-outline-primary.active,
+    .w-100 a.btn-outline-primary.active,
+    .w-100 a.btn-outline-primary.dropdown-toggle.show {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    /* Focus states */
+    .btn-check:focus + .btn-outline-primary,
+    .btn-outline-primary:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    .btn-warning {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-warning:hover,
+    .btn-warning:focus,
+    a.btn-warning:hover,
+    a.btn-warning:focus,
+    .btn-group .btn-warning:hover,
+    .btn-group .btn-warning:focus,
+    .btn-group a.btn-warning:hover,
+    .btn-group a.btn-warning:focus {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-warning:active,
+    a.btn-warning:active,
+    .btn-group .btn-warning:active,
+    .btn-group a.btn-warning:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-check:focus + .btn-warning,
+    .btn-warning:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    .btn-secondary {
+        background-color: var(--secondary-action-color);
+        color: var(--theme-contrast-color);
+        border-color: var(--border-color);
+    }
+    .btn-secondary:hover {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel {
+        background-color: var(--panel-bg);
+        border: var(--border-width) solid var(--border-color);
+        border-radius: 1rem;
+        box-shadow: var(--shadow-offset) var(--shadow-offset) 0px
+            var(--border-color);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* Ensures children conform to rounded corners */
+        height: 100%;
+    }
+
+    .panel-header {
+        padding: 0.75rem 1.25rem;
+        border-bottom: var(--border-width) solid var(--border-color);
+        background-color: var(--theme-accent-color);
+    }
+    .panel-header h5 {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel-body {
+        padding: 1rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stat-card {
+        border: var(--border-width) solid var(--border-color);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        background-color: var(--theme-accent-color);
+        height: 100%;
+    }
+    .stat-card h6,
+    .stat-card .small,
+    .stat-card h3 {
+        color: var(--theme-contrast-color);
+    }
+
+    .trip-card {
+        background-color: var(--panel-bg);
+        border: var(--border-width) solid var(--border-color);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        min-height: 250px;
+    }
+
+    /* Embla Carousel Styles */
+    .embla {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+    .embla__viewport {
+        overflow: hidden;
+        height: 100%;
+    }
+    .embla__container {
+        display: flex;
+        height: 100%;
+    }
+    .embla__slide {
+        flex: 0 0 var(--slide-size);
+        min-width: 0;
+        height: 100%;
+    }
+
+    /* Recent Activity List */
+    .activity-list .list-group-item {
+        padding: 1rem 1.5rem;
+        border-bottom: var(--border-width) solid #eee;
+    }
+    .activity-list .list-group-item:last-child {
+        border-bottom: none;
+    }
+    .activity-icon {
+        color: var(--theme-accent-color);
+    }
+
+    /* Theme Selector */
+    .theme-selector {
+        display: flex;
+        align-items: center;
+    }
+    .theme-dot {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 1px var(--border-color);
+        margin: 0 5px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .theme-dot:hover,
+    .theme-dot.active {
+        transform: scale(1.2);
+        box-shadow: 0 0 0 2px var(--border-color);
+    }
+
+    /* Chart Filters */
+    .chart-filters {
+        display: flex;
+        gap: 1rem;
+        padding: 0.75rem 1.25rem;
+        border-bottom: var(--border-width) solid var(--border-color);
+    }
+    .form-select {
+        border: var(--border-width) solid var(--border-color);
+        border-radius: 0.5rem;
+    }
+
+    /* Chart Containers */
+    .chart-container {
+        position: relative;
+        height: 300px;
+        width: 100%;
+    }
+
+    /* Responsive adjustments for larger screens */
+    @media (min-width: 992px) {
+        .chart-container {
+            height: 350px;
+        }
+
+        /* Ensure both panels in the main content row have consistent heights */
+        .panel-body.d-flex.align-items-center.justify-content-center.align-items-lg-stretch {
+            min-height: 300px;
+        }
+
+        .activity-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    }
+
+    /* Tablet adjustments */
+    @media (min-width: 768px) and (max-width: 991px) {
+        .chart-container {
+            height: 300px;
+        }
+
+        .trip-card {
+            min-height: 220px;
+        }
+
+        .activity-list {
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        /* Ensure both panels have consistent heights on tablet */
+        .panel {
+            min-height: 300px;
+        }
+    }
+
+    /* Mobile-specific adjustments */
+    @media (max-width: 767px) {
+        .chart-container {
+            height: 250px;
+        }
+
+        .trip-card {
+            min-height: 200px;
+        }
+
+        .activity-list {
+            max-height: none;
+            overflow-y: visible;
+        }
+
+        /* Allow panels to grow naturally on mobile but maintain minimum height */
+        .panel {
+            min-height: 250px;
+        }
+
+        /* Ensure Recent Activity panel has consistent height with Recent Trips on mobile */
+        .col-lg-6.mb-4:nth-child(2) .panel {
+            min-height: 250px;
+        }
+
+        /* Adjust chart filters for mobile */
+        .chart-filters {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .chart-filters .form-select {
+            width: 100%;
+        }
+    }
+
+    /* Extra small devices */
+    @media (max-width: 576px) {
+        .chart-container {
+            height: 200px;
+        }
+
+        .trip-card {
+            min-height: 180px;
+        }
+
+        /* Maintain panel heights on extra small devices */
+        .panel {
+            min-height: 230px;
+        }
+    }
+
+    /* Ensure charts use full container width and are centered */
+    .chart-container canvas {
+        max-width: 100% !important;
+        max-height: 100% !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    /* Loading indicator */
+    .chart-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
+    .chart-error {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: #6c757d;
+        text-align: center;
+        padding: 1rem;
+    }
+
+    /* No data message */
+    .chart-no-data {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: #6c757d;
+        text-align: center;
+        padding: 1rem;
+    }
+</style>
+{% endblock %} {% block scripts %}
+<script src="https://unpkg.com/embla-carousel@latest/embla-carousel.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Sync button functionality
+        const syncBtn = document.getElementById("syncBtn");
+        if (syncBtn) {
+            syncBtn.addEventListener("click", async function(e) {
+                e.preventDefault();
+                
+                // Show loading state
+                const originalHTML = syncBtn.innerHTML;
+                syncBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span class="d-none d-md-inline ms-2">Syncing...</span>';
+                syncBtn.classList.add("disabled");
+                
+                try {
+                    const response = await fetch("/api/sync", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        credentials: "same-origin"
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // Show success message
+                        showAlert("success", data.message);
+                        
+                        // Refresh the page to show updated data
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1500);
+                    } else {
+                        // Show error message
+                        showAlert("danger", data.message || "Sync failed. Please try again.");
+                    }
+                } catch (error) {
+                    console.error("Sync error:", error);
+                    showAlert("danger", "An error occurred during sync. Please try again.");
+                } finally {
+                    // Restore button state
+                    setTimeout(() => {
+                        syncBtn.innerHTML = originalHTML;
+                        syncBtn.classList.remove("disabled");
+                    }, 1500);
+                }
+            });
+        }
+        
+        // Function to show alert messages
+        function showAlert(type, message) {
+            // Remove any existing alerts
+            const existingAlert = document.querySelector(".sync-alert");
+            if (existingAlert) {
+                existingAlert.remove();
+            }
+            
+            // Create new alert
+            const alertDiv = document.createElement("div");
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show sync-alert position-fixed top-0 end-0 m-3`;
+            alertDiv.style.zIndex = "9999";
+            alertDiv.role = "alert";
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            // Add to body
+            document.body.appendChild(alertDiv);
+            
+            // Auto dismiss after 5 seconds
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+        
+        // Carousel
+        const emblaNode = document.querySelector(
+            "#tripsCarousel .embla__viewport",
+        );
+        if (emblaNode) {
+            try {
+                const emblaApi = EmblaCarousel(emblaNode, {
+                    loop: true,
+                    align: "start",
+                });
+            } catch (error) {
+                console.error("Error initializing carousel:", error);
+            }
+        }
+
+        // --- Charts ---
+        let categoryPieChart, spendingLineChart;
+        const chartColors = [
+            "#AEC6CF",
+            "#B2D8B2",
+            "#C3B1E1",
+            "#FFDAB9",
+            "#F4C2C2",
+            "#E6E6FA",
+            "#DDBBFF",
+        ];
+
+        function showLoading(containerId) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML =
+                    '<div class="chart-loading"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+            }
+        }
+
+        function showError(containerId, message) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML = `<div class="chart-error"><p>${message}</p></div>`;
+            }
+        }
+
+        function showNoData(containerId) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML =
+                    '<div class="chart-no-data"><p>No data available for the selected filters.</p></div>';
+            }
+        }
+
+        function resetChartContainer(containerId, canvasId) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML = `<canvas id="${canvasId}"></canvas>`;
+            }
+            return document.getElementById(canvasId);
+        }
+
+        const initOrUpdateCategoryChart = (data) => {
+            try {
+                if (categoryPieChart) {
+                    categoryPieChart.destroy();
+                }
+                const canvas = resetChartContainer("categoryPieChartContainer", "categoryPieChart");
+                if (data.category_values && data.category_values.length > 0) {
+                    categoryPieChart = new Chart(canvas, {
+                        type: "doughnut",
+                        data: {
+                            labels: data.category_labels,
+                            datasets: [
+                                {
+                                    data: data.category_values,
+                                    backgroundColor: chartColors,
+                                    borderColor: "#000",
+                                    borderWidth: 2,
+                                },
+                            ],
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: "top",
+                                },
+                            },
+                        },
+                    });
+                } else {
+                    showNoData("categoryPieChartContainer");
+                }
+            } catch (error) {
+                console.error("Error initializing category chart:", error);
+                showError("categoryPieChartContainer", "Error initializing chart. Please try again.");
+            }
+        };
+
+        const initOrUpdateSpendingChart = (data) => {
+            try {
+                if (spendingLineChart) {
+                    spendingLineChart.destroy();
+                }
+                const canvas = resetChartContainer("spendingLineChartContainer", "spendingLineChart");
+                if (data.line_chart_values && data.line_chart_values.length > 0) {
+                    spendingLineChart = new Chart(canvas, {
+                        type: "line",
+                        data: {
+                            labels: data.line_chart_labels,
+                            datasets: [
+                                {
+                                    label: "Spending",
+                                    data: data.line_chart_values,
+                                    fill: true,
+                                    backgroundColor: "rgba(174, 198, 207, 0.2)",
+                                    borderColor: "#AEC6CF",
+                                    tension: 0.4,
+                                    borderWidth: 2,
+                                },
+                            ],
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                x: {
+                                    grid: {
+                                        display: false,
+                                    },
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                },
+                            },
+                        },
+                    });
+                } else {
+                    showNoData("spendingLineChartContainer");
+                }
+            } catch (error) {
+                console.error("Error initializing spending chart:", error);
+                showError("spendingLineChartContainer", "Error initializing chart. Please try again.");
+            }
+        };
+
+        // Update Spending by Category chart
+        const updateCategoryChart = async () => {
+            const tripId = document.getElementById("category-trip-filter").value;
+            const month = document.getElementById("category-month-filter").value;
+
+            showLoading("categoryPieChartContainer");
+
+            let url = `/api/dashboard_data?`;
+            if (tripId !== "all") url += `trip_id=${tripId}&`;
+            if (month !== "all") url += `month=${month}&`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Failed to fetch data: ${response.status} ${errorText}`);
+                }
+                const data = await response.json();
+                initOrUpdateCategoryChart(data);
+            } catch (error) {
+                console.error("Error fetching category chart data:", error);
+                showError("categoryPieChartContainer", `Error loading data: ${error.message}`);
+            }
+        };
+
+        // Update month filter options based on selected trip
+        const updateCategoryMonthFilter = async () => {
+            const tripId = document.getElementById("category-trip-filter").value;
+            const monthFilter = document.getElementById("category-month-filter");
+            monthFilter.disabled = true;
+
+            let url = tripId === "all" ? "/api/all_months" : `/api/months_for_trip/${tripId}`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("Failed to fetch months");
+                const months = await response.json();
+                const currentSelection = monthFilter.value;
+
+                // Clear and repopulate month options
+                monthFilter.innerHTML = '<option value="all">All Time</option>';
+                months.forEach((month) => {
+                    const option = new Option(month.text, month.value);
+                    monthFilter.add(option);
+                });
+
+                // Restore previous selection if still valid, otherwise select the first available month
+                if (currentSelection !== "all" && months.some((m) => m.value === currentSelection)) {
+                    monthFilter.value = currentSelection;
+                } else if (months.length > 0) {
+                    // Select the first month if no valid selection exists
+                    monthFilter.value = months[0].value;
+                } else {
+                    // Default to "all" if no months available
+                    monthFilter.value = "all";
+                }
+            } catch (error) {
+                console.error("Error fetching months:", error);
+                showError("categoryPieChartContainer", "Error loading month data. Please try again.");
+            } finally {
+                monthFilter.disabled = false;
+                // Update the chart with new data
+                updateCategoryChart();
+            }
+        };
+
+        // Update Spending History chart
+        const updateHistoryChart = async () => {
+            const month = document.getElementById("history-month-filter").value;
+            showLoading("spendingLineChartContainer");
+
+            let url = `/api/spending_history?`;
+            if (month !== "all") url += `month=${month}&`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Failed to fetch data: ${response.status} ${errorText}`);
+                }
+                const data = await response.json();
+                initOrUpdateSpendingChart(data);
+            } catch (error) {
+                console.error("Error fetching history chart data:", error);
+                showError("spendingLineChartContainer", `Error loading data: ${error.message}`);
+            }
+        };
+
+        // Add event listeners for independent chart filters
+        document.getElementById("category-trip-filter").addEventListener("change", updateCategoryMonthFilter);
+        document.getElementById("category-month-filter").addEventListener("change", updateCategoryChart);
+        document.getElementById("history-month-filter").addEventListener("change", updateHistoryChart);
+
+        // Initial chart load from server-rendered data
+        try {
+            const initialCategoryData = {
+                category_labels: JSON.parse(document.getElementById('categoryPieChartContainer').getAttribute('data-category-labels') || '[]'),
+                category_values: JSON.parse(document.getElementById('categoryPieChartContainer').getAttribute('data-category-values') || '[]')
+            };
+            initOrUpdateCategoryChart(initialCategoryData);
+
+            const initialSpendingData = {
+                line_chart_labels: JSON.parse(document.getElementById('spendingLineChartContainer').getAttribute('data-line-labels') || '[]'),
+                line_chart_values: JSON.parse(document.getElementById('spendingLineChartContainer').getAttribute('data-line-values') || '[]')
+            };
+            initOrUpdateSpendingChart(initialSpendingData);
+            
+            // Update the category month filter based on the default trip selection
+            // This will also trigger an update of the category chart with the default selections
+            updateCategoryMonthFilter();
+            
+            // Update the history chart with the default month selection
+            updateHistoryChart();
+        } catch (error) {
+            console.error("Error loading initial chart data:", error);
+            showError("categoryPieChartContainer", "Error loading initial data.");
+            showError("spendingLineChartContainer", "Error loading initial data.");
+        }
+    });
+</script>
+{% endblock %}

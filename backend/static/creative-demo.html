@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Expense Tracker Design</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <style>
+        /* Creative Design CSS for Expense Tracker */
+
+        /* Futuristic Gradient Background */
+        .hero-futuristic {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Animated Particle Background */
+        .particle-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s infinite ease-in-out;
+        }
+
+        .particle:nth-child(1) {
+            width: 10px;
+            height: 10px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .particle:nth-child(2) {
+            width: 15px;
+            height: 15px;
+            top: 60%;
+            left: 80%;
+            animation-delay: 1s;
+        }
+
+        .particle:nth-child(3) {
+            width: 8px;
+            height: 8px;
+            top: 40%;
+            left: 30%;
+            animation-delay: 2s;
+        }
+
+        .particle:nth-child(4) {
+            width: 12px;
+            height: 12px;
+            top: 80%;
+            left: 60%;
+            animation-delay: 0.5s;
+        }
+
+        .particle:nth-child(5) {
+            width: 6px;
+            height: 6px;
+            top: 30%;
+            left: 90%;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(20px, 20px) rotate(90deg);
+            }
+            50% {
+                transform: translate(-20px, 20px) rotate(180deg);
+            }
+            75% {
+                transform: translate(-20px, -20px) rotate(270deg);
+            }
+        }
+
+        /* Holographic Card Effect */
+        .holographic-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            position: relative;
+            z-index: 2;
+            overflow: hidden;
+            transform: perspective(1000px) rotateY(0deg);
+            transition: transform 0.5s ease;
+        }
+
+        .holographic-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+        }
+
+        .holographic-card:hover {
+            transform: perspective(1000px) rotateY(5deg);
+        }
+
+        .holographic-card:hover::before {
+            transform: rotate(45deg) translate(20%, 20%);
+        }
+
+        /* 3D Expense Visualization */
+        .expense-3d-container {
+            perspective: 1000px;
+            height: 300px;
+            position: relative;
+        }
+
+        .expense-cube {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotate3d 15s infinite linear;
+            margin: 0 auto;
+        }
+
+        .expense-face {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            backdrop-filter: blur(5px);
+        }
+
+        .expense-face:nth-child(1) {
+            transform: translateZ(75px);
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+        }
+
+        .expense-face:nth-child(2) {
+            transform: rotateY(180deg) translateZ(75px);
+            background: linear-gradient(45deg, #4ecdc4, #88d8d0);
+        }
+
+        .expense-face:nth-child(3) {
+            transform: rotateY(90deg) translateZ(75px);
+            background: linear-gradient(45deg, #45b7d1, #6cbbe8);
+        }
+
+        .expense-face:nth-child(4) {
+            transform: rotateY(-90deg) translateZ(75px);
+            background: linear-gradient(45deg, #f9ca24, #fcd34d);
+        }
+
+        .expense-face:nth-child(5) {
+            transform: rotateX(90deg) translateZ(75px);
+            background: linear-gradient(45deg, #6c5ce7, #8a7dff);
+        }
+
+        .expense-face:nth-child(6) {
+            transform: rotateX(-90deg) translateZ(75px);
+            background: linear-gradient(45deg, #a29bfe, #d6d0ff);
+        }
+
+        @keyframes rotate3d {
+            0% {
+                transform: rotateX(0) rotateY(0) rotateZ(0);
+            }
+            100% {
+                transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+            }
+        }
+
+        /* Interactive Expense Tracker */
+        .interactive-tracker {
+            position: relative;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .tracker-path {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-50%);
+        }
+
+        .tracker-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            width: 0%;
+            transition: width 1s ease;
+        }
+
+        .tracker-marker {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .tracker-marker:hover {
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+
+        .tracker-marker.active {
+            background: #4ecdc4;
+            box-shadow: 0 0 30px #4ecdc4;
+        }
+
+        .tracker-label {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        /* Morphing Shapes */
+        .morph-shape {
+            width: 100px;
+            height: 100px;
+            margin: 2rem auto;
+            position: relative;
+            animation: morph 8s infinite;
+        }
+
+        .morph-circle {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 50%;
+            animation: morph 8s infinite;
+        }
+
+        @keyframes morph {
+            0% {
+                border-radius: 50%;
+                transform: rotate(0deg);
+            }
+            25% {
+                border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+                transform: rotate(90deg);
+            }
+            50% {
+                border-radius: 40% 60% 30% 70% / 60% 30% 70% 40%;
+                transform: rotate(180deg);
+            }
+            75% {
+                border-radius: 70% 30% 50% 50% / 30% 60% 40% 70%;
+                transform: rotate(270deg);
+            }
+            100% {
+                border-radius: 50%;
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Glowing Buttons */
+        .glow-button {
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .glow-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: all 0.6s ease;
+        }
+
+        .glow-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .glow-button:hover::before {
+            left: 100%;
+        }
+
+        .glow-button:active {
+            transform: translateY(0);
+        }
+
+        /* Holographic Text Effect */
+        .holo-text {
+            position: relative;
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .holo-text::before {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            color: #4ecdc4;
+            z-index: -1;
+            filter: blur(10px);
+            opacity: 0.7;
+        }
+
+        /* Floating Cards */
+        .floating-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1rem 0;
+            transform: translateY(0);
+            animation: floatCard 3s ease-in-out infinite;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        .floating-card:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .floating-card:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .floating-card:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        @keyframes floatCard {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Neon Glow Effect */
+        .neon-glow {
+            color: white;
+            text-shadow: 
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 20px #ff6b6b,
+                0 0 40px #ff6b6b,
+                0 0 80px #ff6b6b;
+            animation: neonPulse 2s infinite alternate;
+        }
+
+        @keyframes neonPulse {
+            from {
+                text-shadow: 
+                    0 0 5px #fff,
+                    0 0 10px #fff,
+                    0 0 20px #ff6b6b,
+                    0 0 40px #ff6b6b,
+                    0 0 80px #ff6b6b;
+            }
+            to {
+                text-shadow: 
+                    0 0 10px #fff,
+                    0 0 20px #fff,
+                    0 0 30px #ff6b6b,
+                    0 0 50px #ff6b6b,
+                    0 0 70px #ff6b6b;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-futuristic {
+                padding: 2rem 1rem;
+            }
+            
+            .holographic-card {
+                margin: 1rem;
+            }
+            
+            .glow-button {
+                padding: 12px 24px;
+                font-size: 0.9rem;
+            }
+            
+            .expense-cube {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .expense-face {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .expense-face:nth-child(1) {
+                transform: translateZ(50px);
+            }
+            
+            .expense-face:nth-child(2) {
+                transform: rotateY(180deg) translateZ(50px);
+            }
+            
+            .expense-face:nth-child(3) {
+                transform: rotateY(90deg) translateZ(50px);
+            }
+            
+            .expense-face:nth-child(4) {
+                transform: rotateY(-90deg) translateZ(50px);
+            }
+            
+            .expense-face:nth-child(5) {
+                transform: rotateX(90deg) translateZ(50px);
+            }
+            
+            .expense-face:nth-child(6) {
+                transform: rotateX(-90deg) translateZ(50px);
+            }
+        }
+
+        body {
+            background: #0a0a0a;
+            color: white;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        
+        .bg-dark {
+            background-color: #121212 !important;
+        }
+        
+        .py-7 {
+            padding-top: 5rem !important;
+            padding-bottom: 5rem !important;
+        }
+        
+        .mb-6 {
+            margin-bottom: 4rem !important;
+        }
+        
+        .container {
+            width: 100%;
+            padding-right: 1rem;
+            padding-left: 1rem;
+            margin-right: auto;
+            margin-left: auto;
+        }
+        
+        @media (min-width: 576px) {
+            .container {
+                max-width: 540px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                max-width: 720px;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .container {
+                max-width: 960px;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1140px;
+            }
+        }
+        
+        .text-center {
+            text-align: center !important;
+        }
+        
+        .mx-auto {
+            margin-right: auto !important;
+            margin-left: auto !important;
+        }
+        
+        .d-flex {
+            display: flex !important;
+        }
+        
+        .justify-content-center {
+            justify-content: center !important;
+        }
+        
+        .flex-wrap {
+            flex-wrap: wrap !important;
+        }
+        
+        .min-vh-100 {
+            min-height: 100vh !important;
+        }
+        
+        .position-relative {
+            position: relative !important;
+        }
+        
+        .z-3 {
+            z-index: 3 !important;
+        }
+        
+        .text-white {
+            color: #fff !important;
+        }
+        
+        .text-muted {
+            color: #6c757d !important;
+        }
+        
+        .fw-bold {
+            font-weight: 700 !important;
+        }
+        
+        .display-1 {
+            font-size: 5rem;
+            font-weight: 300;
+            line-height: 1.2;
+        }
+        
+        .display-4 {
+            font-size: 3.5rem;
+            font-weight: 300;
+            line-height: 1.2;
+        }
+        
+        .lead {
+            font-size: 1.25rem;
+            font-weight: 300;
+        }
+        
+        .mb-4 {
+            margin-bottom: 1.5rem !important;
+        }
+        
+        .mb-5 {
+            margin-bottom: 3rem !important;
+        }
+        
+        .p-5 {
+            padding: 3rem !important;
+        }
+        
+        .p-4 {
+            padding: 1.5rem !important;
+        }
+        
+        .rounded-pill {
+            border-radius: 50rem !important;
+        }
+        
+        .text-primary {
+            color: #0d6efd !important;
+        }
+        
+        .bg-primary {
+            background-color: #0d6efd !important;
+        }
+        
+        .bg-opacity-10 {
+            --bs-bg-opacity: 0.1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Futuristic Hero Section -->
+    <div class="hero-futuristic">
+        <!-- Animated Particle Background -->
+        <div class="particle-bg">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        
+        <div class="container position-relative z-3">
+            <div class="row align-items-center justify-content-center min-vh-100">
+                <div class="col-lg-8 text-center">
+                    <h1 class="display-1 fw-bold neon-glow mb-4" data-text="EXPENSE TRACKER">
+                        EXPENSE TRACKER
+                    </h1>
+                    <p class="lead fs-3 text-white mb-5">
+                        The Future of Group Expense Management
+                    </p>
+                    
+                    <!-- Holographic Card with Interactive Elements -->
+                    <div class="holographic-card p-5 mb-5">
+                        <h2 class="holo-text mb-4" data-text="Revolutionary Expense Tracking">
+                            Revolutionary Expense Tracking
+                        </h2>
+                        <p class="text-white mb-4">
+                            Experience the next generation of group expense management with our AI-powered platform
+                        </p>
+                        
+                        <!-- 3D Expense Visualization -->
+                        <div class="expense-3d-container mb-4">
+                            <div class="expense-cube">
+                                <div class="expense-face">₹12K</div>
+                                <div class="expense-face">4 People</div>
+                                <div class="expense-face">Equal Split</div>
+                                <div class="expense-face">₹3K Each</div>
+                                <div class="expense-face">Settled</div>
+                                <div class="expense-face">Smart</div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex flex-wrap justify-content-center">
+                            <a href="#" class="glow-button">
+                                <i class="fas fa-rocket me-2"></i>Start Free Trial
+                            </a>
+                            <a href="#" class="glow-button">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Expense Tracker Section -->
+    <div class="container py-7">
+        <div class="row">
+            <div class="col-12 text-center mb-6">
+                <h2 class="display-4 fw-bold mb-4">Interactive <span class="text-primary">Expense Journey</span></h2>
+                <p class="lead mx-auto text-muted" style="max-width: 700px;">
+                    Visualize how our platform transforms group expenses from chaos to clarity
+                </p>
+            </div>
+        </div>
+        
+        <!-- Interactive Tracker -->
+        <div class="holographic-card p-4 mb-5">
+            <div class="interactive-tracker">
+                <div class="tracker-path"></div>
+                <div class="tracker-progress" id="trackerProgress"></div>
+                <div class="tracker-marker" style="left: 10%;" data-progress="20">
+                    <div class="tracker-label">Expense Added</div>
+                </div>
+                <div class="tracker-marker" style="left: 30%;" data-progress="40">
+                    <div class="tracker-label">Split Calculated</div>
+                </div>
+                <div class="tracker-marker" style="left: 50%;" data-progress="60">
+                    <div class="tracker-label">Notifications Sent</div>
+                </div>
+                <div class="tracker-marker" style="left: 70%;" data-progress="80">
+                    <div class="tracker-label">Payments Made</div>
+                </div>
+                <div class="tracker-marker active" style="left: 90%;" data-progress="100">
+                    <div class="tracker-label">Settled</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Morphing Shape Visualization -->
+        <div class="text-center mb-5">
+            <h3 class="mb-4">Expense Transformation</h3>
+            <div class="morph-shape">
+                <div class="morph-circle"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Feature Cards -->
+    <div class="container-fluid bg-dark py-7">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="floating-card">
+                        <div class="text-center mb-3">
+                            <div class="icon-circle bg-primary bg-opacity-10 text-primary mx-auto mb-3" style="width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-brain fa-2x"></i>
+                            </div>
+                            <h4 class="text-white">AI-Powered Insights</h4>
+                        </div>
+                        <p class="text-muted">
+                            Our machine learning algorithms analyze spending patterns to provide smart recommendations and predictions.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="floating-card">
+                        <div class="text-center mb-3">
+                            <div class="icon-circle bg-success bg-opacity-10 text-success mx-auto mb-3" style="width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-shield-alt fa-2x"></i>
+                            </div>
+                            <h4 class="text-white">Bank-Level Security</h4>
+                        </div>
+                        <p class="text-muted">
+                            Military-grade encryption and zero-knowledge architecture keep your financial data completely private.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="floating-card">
+                        <div class="text-center mb-3">
+                            <div class="icon-circle bg-warning bg-opacity-10 text-warning mx-auto mb-3" style="width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-bolt fa-2x"></i>
+                            </div>
+                            <h4 class="text-white">Lightning Fast</h4>
+                        </div>
+                        <p class="text-muted">
+                            Real-time synchronization across all devices with our global CDN and edge computing infrastructure.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="container py-7">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <div class="holographic-card p-5">
+                    <h2 class="display-4 fw-bold mb-4">Ready to Transform Your <span class="text-primary">Expense Management</span>?</h2>
+                    <p class="lead mb-5 text-white">
+                        Join thousands of users who have simplified their group finances with our revolutionary platform.
+                    </p>
+                    <a href="#" class="glow-button">
+                        <i class="fas fa-star me-2"></i>Get Started Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // Creative Interactions JavaScript for Expense Tracker
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Enhanced 3D cube rotation
+            const cube = document.querySelector('.expense-cube');
+            if (cube) {
+                let rotationX = 0;
+                let rotationY = 0;
+                
+                // Auto-rotate
+                setInterval(() => {
+                    rotationX += 0.5;
+                    rotationY += 0.5;
+                    cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg) rotateZ(${rotationX * 0.5}deg)`;
+                }, 50);
+                
+                // Mouse interaction
+                cube.addEventListener('mousemove', (e) => {
+                    const rect = cube.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    
+                    const mouseX = e.clientX - centerX;
+                    const mouseY = e.clientY - centerY;
+                    
+                    const rotateY = mouseX * 0.1;
+                    const rotateX = -mouseY * 0.1;
+                    
+                    cube.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                });
+                
+                // Reset on mouse leave
+                cube.addEventListener('mouseleave', () => {
+                    cube.style.transform = 'rotateX(0) rotateY(0)';
+                });
+            }
+            
+            // Particle animation enhancement
+            const particles = document.querySelectorAll('.particle');
+            particles.forEach((particle, index) => {
+                // Randomize animation
+                const delay = Math.random() * 5;
+                const duration = 3 + Math.random() * 7;
+                
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                // Randomize size
+                const size = 5 + Math.random() * 15;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Randomize position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+            });
+            
+            // Holographic card tilt effect
+            const cards = document.querySelectorAll('.holographic-card');
+            cards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateY = (x - centerX) / 25;
+                    const rotateX = (centerY - y) / 25;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+                });
+            });
+            
+            // Morphing shape color change
+            const morphShape = document.querySelector('.morph-circle');
+            if (morphShape) {
+                let hue = 0;
+                setInterval(() => {
+                    hue = (hue + 1) % 360;
+                    morphShape.style.background = `linear-gradient(45deg, hsl(${hue}, 100%, 60%), hsl(${(hue + 60) % 360}, 100%, 60%))`;
+                }, 100);
+            }
+            
+            // Interactive tracker enhancement
+            const trackerMarkers = document.querySelectorAll('.tracker-marker');
+            const trackerProgress = document.getElementById('trackerProgress');
+            
+            if (trackerMarkers.length > 0 && trackerProgress) {
+                // Initialize progress
+                setTimeout(() => {
+                    trackerProgress.style.width = '100%';
+                    trackerMarkers[trackerMarkers.length - 1].classList.add('active');
+                }, 1000);
+                
+                // Add hover effects
+                trackerMarkers.forEach(marker => {
+                    marker.addEventListener('mouseenter', function() {
+                        this.style.transform = 'translate(-50%, -50%) scale(1.3)';
+                    });
+                    
+                    marker.addEventListener('mouseleave', function() {
+                        this.style.transform = 'translate(-50%, -50%) scale(1)';
+                    });
+                });
+                
+                // Add click functionality
+                trackerMarkers.forEach(marker => {
+                    marker.addEventListener('click', function() {
+                        const progressValue = this.getAttribute('data-progress');
+                        trackerProgress.style.width = progressValue + '%';
+                        
+                        // Remove active class from all markers
+                        trackerMarkers.forEach(m => m.classList.remove('active'));
+                        
+                        // Add active class to clicked marker
+                        this.classList.add('active');
+                    });
+                });
+            }
+            
+            // Glow button enhancement
+            const glowButtons = document.querySelectorAll('.glow-button');
+            glowButtons.forEach(button => {
+                button.addEventListener('mousemove', (e) => {
+                    const rect = button.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    button.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05))`;
+                });
+                
+                button.addEventListener('mouseleave', () => {
+                    button.style.background = 'rgba(255, 255, 255, 0.1)';
+                });
+            });
+            
+            // Floating card enhancement
+            const floatingCards = document.querySelectorAll('.floating-card');
+            floatingCards.forEach((card, index) => {
+                // Randomize animation delay
+                card.style.animationDelay = `${index * 0.2}s`;
+                
+                // Add interactive hover effect
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const moveX = (x - centerX) / 20;
+                    const moveY = (y - centerY) / 20;
+                    
+                    card.style.transform = `translateY(-10px) translate(${moveX}px, ${moveY}px)`;
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(-10px)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

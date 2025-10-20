@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settlement Report - {{ trip.name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #4a6fdc;
+            padding-bottom: 20px;
+        }
+        .header h1 {
+            color: #4a6fdc;
+            margin-bottom: 5px;
+        }
+        .header p {
+            color: #666;
+            margin: 5px 0;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            color: #4a6fdc;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .positive {
+            color: #28a745;
+        }
+        .negative {
+            color: #dc3545;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+        .summary-box {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .alert-info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Trip Settlement Report</h1>
+        <h2>{{ trip.name }}</h2>
+        <p>{{ trip.start_date.strftime('%d %b %Y') }} - {{ trip.end_date.strftime('%d %b %Y') }}</p>
+    </div>
+
+    <div class="section">
+        <h3 class="section-title">Trip Summary</h3>
+        <div class="summary-box">
+            <table>
+                <tr>
+                    <td><strong>Trip Name:</strong></td>
+                    <td>{{ trip.name }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Dates:</strong></td>
+                    <td>{{ trip.start_date.strftime('%d %b %Y') }} - {{ trip.end_date.strftime('%d %b %Y') }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Total Expenses:</strong></td>
+                    <td>₹{{ trip.calculate_total_expenses()|round(2) }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Number of Participants:</strong></td>
+                    <td>{{ balances|length }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Report Generated:</strong></td>
+                    <td>{{ generated_date }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    {% if settlements %}
+    <div class="section">
+        <h3 class="section-title">Recommended Settlements</h3>
+        <div class="alert alert-info">
+            This report shows the optimal way to settle all debts with the minimum number of transactions.
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>From</th>
+                    <th>To</th>
+                    <th class="text-right">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for settlement in settlements %}
+                <tr>
+                    <td>{{ user_map.get(settlement.from_user, 'Unknown') }}</td>
+                    <td>{{ user_map.get(settlement.to_user, 'Unknown') }}</td>
+                    <td class="text-right">₹{{ settlement.amount|round(2) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="section">
+        <h3 class="section-title">Settlements</h3>
+        <div class="alert alert-info">
+            Everyone is settled up! There are no outstanding balances in this trip.
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="section">
+        <h3 class="section-title">Individual Balances</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Participant</th>
+                    <th class="text-right">Total Paid</th>
+                    <th class="text-right">Total Share</th>
+                    <th class="text-right">Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for participant_id, balance in balances.items() %}
+                <tr>
+                    <td>{{ user_map.get(participant_id, 'Unknown') }}</td>
+                    <td class="text-right">
+                        {% set total_paid = trip.expenses.filter_by(payer_id=participant_id|int).with_entities(func.sum(Expense.amount)).scalar() or 0 %}
+                        ₹{{ total_paid|round(2) }}
+                    </td>
+                    <td class="text-right">
+                        {% set total_share = total_paid - balance %}
+                        ₹{{ total_share|round(2) }}
+                    </td>
+                    <td class="text-right {% if balance > 0 %}positive{% elif balance < 0 %}negative{% endif %}">
+                        {% if balance > 0 %}
+                        +₹{{ balance|round(2) }}
+                        {% elif balance < 0 %}
+                        -₹{{ (balance * -1)|round(2) }}
+                        {% else %}
+                        ₹0.00
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h3 class="section-title">Expense Breakdown</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th class="text-right">Amount</th>
+                    <th>Paid By</th>
+                    <th>Split Method</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in trip.expenses.order_by(Expense.date.desc()).all() %}
+                <tr>
+                    <td>{{ expense.date.strftime('%d %b %Y') }}</td>
+                    <td>{{ expense.description }}</td>
+                    <td class="text-right">₹{{ expense.amount|round(2) }}</td>
+                    <td>{{ user_map.get(expense.payer_id|string, 'Unknown') }}</td>
+                    <td>
+                        {% if expense.split_method == 'equal' %}
+                        Equal
+                        {% elif expense.split_method == 'exact' %}
+                        Exact
+                        {% elif expense.split_method == 'itemized' %}
+                        Itemized
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer">
+        <p>Generated by Trip Expense Tracker | {{ generated_date }}</p>
+        <p>This is an automatically generated report. For any questions or issues, please contact the trip admin.</p>
+    </div>
+</body>
+</html>

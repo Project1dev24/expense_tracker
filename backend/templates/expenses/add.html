@@ -1,0 +1,1182 @@
+{% extends "base.html" %} {% block title %}Add Expense - Trip Expense Tracker{%
+endblock %} {% block styles %}
+<style>
+    :root {
+        --body-bg: #f4f1ea;
+        --panel-bg: #ffffff;
+        --border-color: #000000;
+        --theme-accent-color: #aec6cf; /* Default: Pastel Blue */
+        --theme-contrast-color: #000000; /* Default for light accent */
+        --secondary-action-color: #85a0aa; /* Default: Darkened Pastel Blue */
+        --border-width: 2px;
+        --shadow-offset: 5px;
+    }
+
+    body {
+        background-color: var(--body-bg);
+        font-family:
+            -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+            Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+            "Segoe UI Symbol";
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .fw-bold {
+        font-weight: 700 !important;
+        color: var(--border-color);
+    }
+
+    .btn {
+        border: var(--border-width) solid var(--border-color);
+        box-shadow: 3px 3px 0px var(--border-color);
+        border-radius: 0.5rem;
+        font-weight: 700;
+        transition: all 0.15s ease-out;
+        padding: 0.5rem 1rem;
+    }
+
+    .btn:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 5px 5px 0px var(--border-color);
+    }
+
+    .btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0px var(--border-color);
+    }
+
+    .btn-primary {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-primary:hover,
+    .btn-primary:focus,
+    .btn-primary:active,
+    a.btn-primary:hover,
+    a.btn-primary:focus,
+    a.btn-primary:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-check:focus + .btn-primary,
+    .btn-primary:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    /* Added styles for outline buttons to maintain theme colors */
+    .btn-outline-primary {
+        color: var(--theme-accent-color) !important;
+        border-color: var(--theme-accent-color) !important;
+        background-color: transparent !important;
+    }
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus,
+    .btn-outline-primary:active,
+    a.btn-outline-primary:hover,
+    a.btn-outline-primary:focus,
+    a.btn-outline-primary:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-check:focus + .btn-outline-primary,
+    .btn-outline-primary:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    .btn-secondary {
+        background-color: var(--secondary-action-color);
+        color: var(--theme-contrast-color);
+        border-color: var(--border-color);
+    }
+    .btn-secondary:hover {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel {
+        background-color: var(--panel-bg);
+        border: var(--border-width) solid var(--border-color);
+        border-radius: 1rem;
+        box-shadow: var(--shadow-offset) var(--shadow-offset) 0px
+            var(--border-color);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* Ensures children conform to rounded corners */
+    }
+
+    .panel-header {
+        padding: 0.75rem 1.25rem;
+        border-bottom: var(--border-width) solid var(--border-color);
+        background-color: var(--theme-accent-color);
+    }
+    .panel-header h5,
+    .panel-header h4 {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel-body {
+        padding: 1rem;
+        flex-grow: 1;
+    }
+
+    /* Custom styles for this page */
+    .item-participants-select {
+        min-height: 100px;
+    }
+
+    .item-participants-select option {
+        padding: 5px;
+    }
+</style>
+{% endblock %} {% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="panel">
+            <div class="panel-header">
+                <h4 class="mb-0">Add Expense to {{ trip.name }}</h4>
+            </div>
+            <div class="panel-body">
+                <form
+                    method="POST"
+                    action="{{ url_for('expenses.add_expense', trip_id=trip.id) }}"
+                    id="expenseForm"
+                >
+                    <!-- Basic Expense Information -->
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label for="description" class="form-label"
+                                >Description</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="description"
+                                name="description"
+                                required
+                            />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="amount" class="form-label"
+                                >Amount (₹)</label
+                            >
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="amount"
+                                name="amount"
+                                step="0.01"
+                                min="0.01"
+                                required
+                            />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="date" class="form-label">Date</label>
+                            <input
+                                type="date"
+                                class="form-control"
+                                id="date"
+                                name="date"
+                                required
+                            />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="category" class="form-label"
+                                >Category</label
+                            >
+                            <select
+                                class="form-select"
+                                id="category"
+                                name="category"
+                            >
+                                <option value="">Select category</option>
+                                <option value="Food">Food</option>
+                                <option value="Transport">Transport</option>
+                                <option value="Accommodation">
+                                    Accommodation
+                                </option>
+                                <option value="Entertainment">
+                                    Entertainment
+                                </option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Medical">Medical</option>
+                                <option value="Utilities">Utilities</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="payer_id" class="form-label"
+                                >Paid By</label
+                            >
+                            <select
+                                class="form-select"
+                                id="payer_id"
+                                name="payer_id"
+                                required
+                            >
+                                <!-- Everyone option -->
+                                <option value="group_everyone">
+                                    Everyone (Group Payment)
+                                </option>
+
+                                <!-- Registered participants -->
+                                <optgroup label="Registered Users">
+                                    {% for participant in participants %}
+                                    <option
+                                        value="{{ participant.id }}"
+                                        {% if participant.id == current_user.id %}selected{% endif %}
+                                    >
+                                        {{ participant.name }}{% if
+                                        participant.id == current_user.id %}
+                                        (You){% endif %}
+                                    </option>
+                                    {% endfor %}
+                                </optgroup>
+
+                                <!-- Unregistered participants -->
+                                {% if unregistered_participants %}
+                                <optgroup label="Unregistered Participants">
+                                    {% for name in unregistered_participants %}
+                                    <option value="unregistered_{{ name }}">
+                                        {{ name }} (Unregistered)
+                                    </option>
+                                    {% endfor %}
+                                </optgroup>
+                                {% endif %}
+                            </select>
+                            <div class="form-text">
+                                <small>Select who paid for this expense</small>
+                            </div>
+
+                            <!-- Warning for Everyone payment option -->
+                            <div
+                                id="everyonePaymentWarning"
+                                class="alert alert-warning mt-2"
+                                style="display: none"
+                            >
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <strong>Group Payment:</strong> This indicates
+                                the expense was paid collectively by the group
+                                rather than by an individual. This won't affect
+                                individual settlements - participants will still
+                                need to pay or receive money based on their
+                                consumption.
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="split_method" class="form-label"
+                                >Split Method</label
+                            >
+                            <select
+                                class="form-select"
+                                id="split_method"
+                                name="split_method"
+                                required
+                            >
+                                <option value="equal">Equal Split</option>
+                                <option value="exact">Exact Amounts</option>
+                                <option value="itemized">Itemized</option>
+                            </select>
+                            <div class="form-text">
+                                <small>
+                                    <strong>Equal:</strong> Split equally among
+                                    selected participants<br />
+                                    <strong>Exact:</strong> Specify exact amount
+                                    for each participant<br />
+                                    <strong>Itemized:</strong> Split by items
+                                    consumed by each participant
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Participants Selection -->
+                    <div class="mb-4">
+                        <label class="form-label">Select Participants</label>
+                        <div class="card">
+                            <div class="card-body">
+                                <div
+                                    class="mb-2 d-flex justify-content-between align-items-center"
+                                >
+                                    <div class="form-check">
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            id="selectAllParticipants"
+                                        />
+                                        <label
+                                            class="form-check-label"
+                                            for="selectAllParticipants"
+                                        >
+                                            <strong>Select All</strong>
+                                        </label>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary btn-sm"
+                                        id="everyoneButton"
+                                    >
+                                        <i class="fas fa-users me-1"></i>
+                                        Everyone
+                                    </button>
+                                </div>
+                                <div class="row">
+                                    <!-- Registered Participants -->
+                                    {% if participants %}
+                                    <div class="col-12 mb-2">
+                                        <h6>Registered Users</h6>
+                                    </div>
+                                    {% for participant in participants %}
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-check">
+                                            <input
+                                                class="form-check-input participant-checkbox"
+                                                type="checkbox"
+                                                name="participants"
+                                                value="{{ participant.id }}"
+                                                id="participant{{ participant.id }}"
+                                                {% if participant.id == current_user.id %}checked{% endif %}
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                for="participant{{ participant.id }}"
+                                            >
+                                                {{ participant.name }} {% if
+                                                participant.id ==
+                                                current_user.id %}
+                                                <span class="badge bg-primary"
+                                                    >You</span
+                                                >
+                                                {% endif %}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {% endfor %} {% endif %}
+
+                                    <!-- Unregistered Participants -->
+                                    {% if unregistered_participants %}
+                                    <div class="col-12 mt-3 mb-2">
+                                        <h6>Unregistered Participants</h6>
+                                    </div>
+                                    {% for name in unregistered_participants %}
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-check">
+                                            <input
+                                                class="form-check-input participant-checkbox"
+                                                type="checkbox"
+                                                name="unregistered_participants"
+                                                value="{{ name }}"
+                                                id="unregistered{{ loop.index }}"
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                for="unregistered{{ loop.index }}"
+                                            >
+                                                {{ name }}
+                                                <span class="badge bg-secondary"
+                                                    >Unregistered</span
+                                                >
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {% endfor %} {% else %}
+                                    <div class="col-12 mt-3 mb-2">
+                                        <p>
+                                            No unregistered participants found
+                                        </p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Equal Split Section (default) -->
+                    <div id="equalSplitSection" class="split-section mb-4">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            The amount will be split equally among all selected
+                            participants.
+                        </div>
+                    </div>
+
+                    <!-- Exact Split Section (hidden by default) -->
+                    <div
+                        id="exactSplitSection"
+                        class="split-section mb-4"
+                        style="display: none"
+                    >
+                        <h5 class="mb-3">Specify Exact Amounts</h5>
+                        <div class="alert alert-warning mb-3">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            The sum of all shares must equal the total expense
+                            amount.
+                        </div>
+                        <div id="exactSplitParticipants">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <span
+                                >Total: ₹<span id="exactSplitTotal"
+                                    >0.00</span
+                                ></span
+                            >
+                            <span
+                                >Expense Amount: ₹<span
+                                    id="exactSplitExpenseAmount"
+                                    >0.00</span
+                                ></span
+                            >
+                            <span
+                                >Difference: ₹<span id="exactSplitDifference"
+                                    >0.00</span
+                                ></span
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Itemized Split Section (hidden by default) -->
+                    <div
+                        id="itemizedSplitSection"
+                        class="split-section mb-4"
+                        style="display: none"
+                    >
+                        <h5 class="mb-3">Itemized Split</h5>
+                        <div class="alert alert-info mb-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Add items and select who consumed each item. The
+                            cost will be split equally among the consumers of
+                            each item.
+                            <br /><strong>Tip:</strong> Hold Ctrl (or Cmd on
+                            Mac) to select multiple participants for each item.
+                        </div>
+
+                        <div id="itemsContainer">
+                            <!-- Item template will be cloned and inserted here -->
+                        </div>
+
+                        <template id="itemTemplate">
+                            <div class="card mb-3 item-card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label"
+                                                >Item Name</label
+                                            >
+                                            <input
+                                                type="text"
+                                                class="form-control item-name"
+                                                required
+                                            />
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label"
+                                                >Price (₹)</label
+                                            >
+                                            <input
+                                                type="number"
+                                                class="form-control item-price"
+                                                step="0.01"
+                                                min="0.01"
+                                                required
+                                            />
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label"
+                                                >Consumed By</label
+                                            >
+                                            <select
+                                                class="form-select item-participants-select"
+                                                multiple
+                                                required
+                                            >
+                                                <!-- Will be populated by JavaScript -->
+                                            </select>
+                                        </div>
+                                        <div
+                                            class="col-md-1 mb-2 d-flex align-items-end"
+                                        >
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-danger remove-item"
+                                            >
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+
+                        <div
+                            class="d-flex justify-content-between align-items-center"
+                        >
+                            <button
+                                type="button"
+                                class="btn btn-outline-primary"
+                                id="addItemBtn"
+                            >
+                                <i class="fas fa-plus me-2"></i>Add Item
+                            </button>
+                            <div>
+                                <span
+                                    >Total: ₹<span id="itemizedSplitTotal"
+                                        >0.00</span
+                                    ></span
+                                >
+                                <span class="ms-3"
+                                    >Expense Amount: ₹<span
+                                        id="itemizedSplitExpenseAmount"
+                                        >0.00</span
+                                    ></span
+                                >
+                                <span class="ms-3"
+                                    >Difference: ₹<span
+                                        id="itemizedSplitDifference"
+                                        >0.00</span
+                                    ></span
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <input
+                        type="hidden"
+                        id="item_count"
+                        name="item_count"
+                        value="0"
+                    />
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a
+                            href="{{ url_for('trips.view_trip', trip_id=trip.id) }}"
+                            class="btn btn-secondary"
+                        >
+                            <i class="fas fa-arrow-left me-2"></i>Cancel
+                        </a>
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            id="submitBtn"
+                        >
+                            <i class="fas fa-save me-2"></i>Save Expense
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Set default date to today
+        const today = new Date();
+        document.getElementById("date").value = today
+            .toISOString()
+            .split("T")[0];
+
+        // Toggle Everyone payment warning
+        const payerSelect = document.getElementById("payer_id");
+        const everyoneWarning = document.getElementById(
+            "everyonePaymentWarning",
+        );
+
+        function toggleEveryoneWarning() {
+            if (payerSelect.value === "group_everyone") {
+                everyoneWarning.style.display = "block";
+            } else {
+                everyoneWarning.style.display = "none";
+            }
+        }
+
+        // Check initial state
+        toggleEveryoneWarning();
+
+        // Listen for changes
+        payerSelect.addEventListener("change", toggleEveryoneWarning);
+
+        // Select All Participants functionality
+        const selectAllCheckbox = document.getElementById(
+            "selectAllParticipants",
+        );
+        const participantCheckboxes = document.querySelectorAll(
+            ".participant-checkbox",
+        );
+
+        selectAllCheckbox.addEventListener("change", function () {
+            participantCheckboxes.forEach((checkbox) => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+            updateSplitSections();
+        });
+
+        // Everyone button functionality
+        const everyoneButton = document.getElementById("everyoneButton");
+        everyoneButton.addEventListener("click", function () {
+            // Select all participants
+            participantCheckboxes.forEach((checkbox) => {
+                checkbox.checked = true;
+            });
+
+            // Set "Select All" checkbox to checked
+            selectAllCheckbox.checked = true;
+
+            // Set description to "Everyone" if empty
+            const descriptionInput = document.getElementById("description");
+            if (!descriptionInput.value.trim()) {
+                descriptionInput.value = "Everyone";
+            }
+
+            // Update UI for split methods
+            updateSplitSections();
+
+            // Show feedback
+            alert("Selected all participants for an 'Everyone' expense!");
+        });
+
+        participantCheckboxes.forEach((checkbox) => {
+            checkbox.addEventListener("change", updateSplitSections);
+        });
+
+        // Split Method Change Handler
+        const splitMethodSelect = document.getElementById("split_method");
+        const splitSections = document.querySelectorAll(".split-section");
+
+        splitMethodSelect.addEventListener("change", function () {
+            // Hide all split sections
+            splitSections.forEach((section) => {
+                section.style.display = "none";
+            });
+
+            // Show the selected split section
+            const selectedMethod = splitMethodSelect.value;
+            document.getElementById(
+                selectedMethod + "SplitSection",
+            ).style.display = "block";
+
+            updateSplitSections();
+        });
+
+        // Amount Change Handler
+        const amountInput = document.getElementById("amount");
+        amountInput.addEventListener("input", updateSplitSections);
+
+        // Initialize split sections
+        updateSplitSections();
+
+        // Add Item Button Handler
+        const addItemBtn = document.getElementById("addItemBtn");
+        const itemsContainer = document.getElementById("itemsContainer");
+        const itemTemplate = document.getElementById("itemTemplate");
+        const itemCountInput = document.getElementById("item_count");
+
+        addItemBtn.addEventListener("click", function () {
+            addNewItem();
+        });
+
+        // Add first item by default for itemized split
+        addNewItem();
+
+        // Form Submission Validation
+        const expenseForm = document.getElementById("expenseForm");
+        const submitBtn = document.getElementById("submitBtn");
+
+        // Direct form submission without JavaScript validation
+        // This ensures the form is submitted directly to the server
+        submitBtn.addEventListener("click", function (event) {
+            // Prevent the default button click behavior
+            event.preventDefault();
+
+            const selectedMethod = splitMethodSelect.value;
+            const amount = parseFloat(amountInput.value);
+
+            // Check if at least one participant is selected
+            const selectedParticipants = document.querySelectorAll(
+                ".participant-checkbox:checked",
+            );
+            if (selectedParticipants.length === 0) {
+                alert("Please select at least one participant.");
+                return;
+            }
+
+            // Debug form submission
+            console.log("Form submission data:");
+            console.log(
+                "Description:",
+                document.getElementById("description").value,
+            );
+            console.log("Amount:", document.getElementById("amount").value);
+            console.log("Date:", document.getElementById("date").value);
+            console.log("Split Method:", selectedMethod);
+            console.log(
+                "Selected Participants:",
+                Array.from(selectedParticipants).map((p) => p.value),
+            );
+
+            // Basic validation
+            if (!document.getElementById("description").value) {
+                alert("Please enter a description.");
+                return;
+            }
+
+            if (
+                !document.getElementById("amount").value ||
+                parseFloat(document.getElementById("amount").value) <= 0
+            ) {
+                alert("Please enter a valid amount greater than zero.");
+                return;
+            }
+
+            if (!document.getElementById("date").value) {
+                alert("Please select a date.");
+                return;
+            }
+
+            // Validate based on split method
+            if (selectedMethod === "exact") {
+                // Validate exact split amounts
+                const totalShares = calculateExactSplitTotal();
+                if (Math.abs(totalShares - amount) > 0.01) {
+                    alert(
+                        "The sum of shares must equal the total expense amount.",
+                    );
+                    return;
+                }
+            } else if (selectedMethod === "itemized") {
+                // Validate itemized split
+                const totalItemPrices = calculateItemizedSplitTotal();
+                if (Math.abs(totalItemPrices - amount) > 0.01) {
+                    alert(
+                        "The sum of item prices must equal the total expense amount.",
+                    );
+                    return;
+                }
+
+                // Check if each item has at least one participant
+                const items = document.querySelectorAll(".item-card");
+                for (let i = 0; i < items.length; i++) {
+                    const selectElement = items[i].querySelector(
+                        ".item-participants-select",
+                    );
+                    if (selectElement.selectedOptions.length === 0) {
+                        const itemName =
+                            items[i].querySelector(".item-name").value ||
+                            `Item ${i + 1}`;
+                        alert(
+                            `Item "${itemName}" must be consumed by at least one participant.`,
+                        );
+                        return;
+                    }
+                }
+
+                // Update item form fields before submission
+                updateItemFormFields();
+            }
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML =
+                '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
+
+            // Log the entire form data for debugging
+            const formData = new FormData(expenseForm);
+            console.log("Form data entries:");
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ": " + pair[1]);
+            }
+
+            console.log("Submitting form directly...");
+            // Submit the form directly to bypass any issues with the form submission
+            expenseForm.submit();
+        });
+
+        // Helper Functions
+        function updateSplitSections() {
+            const selectedMethod = splitMethodSelect.value;
+            const amount = parseFloat(amountInput.value) || 0;
+
+            // Get both registered and unregistered participants
+            const selectedRegisteredParticipants = Array.from(
+                document.querySelectorAll('input[name="participants"]:checked'),
+            ).map((checkbox) => ({
+                id: checkbox.value,
+                name: checkbox.nextElementSibling.textContent.trim(),
+                type: "registered",
+            }));
+
+            const selectedUnregisteredParticipants = Array.from(
+                document.querySelectorAll(
+                    'input[name="unregistered_participants"]:checked',
+                ),
+            ).map((checkbox) => ({
+                id: checkbox.value,
+                name: checkbox.nextElementSibling.textContent.trim(),
+                type: "unregistered",
+            }));
+
+            const selectedParticipants = [
+                ...selectedRegisteredParticipants,
+                ...selectedUnregisteredParticipants,
+            ];
+
+            // Update Exact Split Section
+            if (selectedMethod === "exact") {
+                const exactSplitParticipants = document.getElementById(
+                    "exactSplitParticipants",
+                );
+                exactSplitParticipants.innerHTML = "";
+
+                if (selectedParticipants.length > 0) {
+                    const equalShare = amount / selectedParticipants.length;
+
+                    selectedParticipants.forEach((participant) => {
+                        const row = document.createElement("div");
+                        row.className = "mb-3";
+
+                        // Different field name based on participant type
+                        const fieldName =
+                            participant.type === "registered"
+                                ? `share_${participant.id}`
+                                : `share_unregistered_${participant.id}`;
+
+                        row.innerHTML = `
+                            <label class="form-label">${participant.name}</label>
+                            <input type="number" class="form-control exact-share"
+                                   name="${fieldName}"
+                                   value="${equalShare.toFixed(2)}"
+                                   step="0.01" min="0" required>
+                        `;
+                        exactSplitParticipants.appendChild(row);
+                    });
+
+                    // Add event listeners to share inputs
+                    const shareInputs =
+                        document.querySelectorAll(".exact-share");
+                    shareInputs.forEach((input) => {
+                        input.addEventListener("input", updateExactSplitTotals);
+                    });
+                }
+
+                updateExactSplitTotals();
+            }
+
+            // Update Itemized Split Section
+            if (selectedMethod === "itemized") {
+                // Update participant dropdowns in all items
+                updateItemParticipants();
+                updateItemizedSplitTotals();
+            }
+        }
+
+        function updateExactSplitTotals() {
+            const amount = parseFloat(amountInput.value) || 0;
+            const totalShares = calculateExactSplitTotal();
+
+            document.getElementById("exactSplitTotal").textContent =
+                totalShares.toFixed(2);
+            document.getElementById("exactSplitExpenseAmount").textContent =
+                amount.toFixed(2);
+            document.getElementById("exactSplitDifference").textContent =
+                Math.abs(totalShares - amount).toFixed(2);
+
+            // Highlight difference if not zero
+            const differenceSpan = document.getElementById(
+                "exactSplitDifference",
+            );
+            if (Math.abs(totalShares - amount) > 0.01) {
+                differenceSpan.className = "text-danger";
+            } else {
+                differenceSpan.className = "text-success";
+            }
+        }
+
+        function calculateExactSplitTotal() {
+            const shareInputs = document.querySelectorAll(".exact-share");
+            let total = 0;
+
+            shareInputs.forEach((input) => {
+                total += parseFloat(input.value) || 0;
+            });
+
+            return total;
+        }
+
+        function addNewItem() {
+            // Clone the template
+            const newItem = document.importNode(
+                itemTemplate.content,
+                true,
+            ).firstElementChild;
+
+            // Add event listeners to the new item
+            const removeBtn = newItem.querySelector(".remove-item");
+            removeBtn.addEventListener("click", function () {
+                if (document.querySelectorAll(".item-card").length > 1) {
+                    newItem.remove();
+                    updateItemCount();
+                    updateItemizedSplitTotals();
+                } else {
+                    alert("You must have at least one item.");
+                }
+            });
+
+            const priceInput = newItem.querySelector(".item-price");
+            priceInput.addEventListener("input", updateItemizedSplitTotals);
+
+            // Get all selected participants (both registered and unregistered)
+            const selectedRegisteredParticipants = Array.from(
+                document.querySelectorAll('input[name="participants"]:checked'),
+            ).map((checkbox) => ({
+                id: checkbox.value,
+                name: checkbox.nextElementSibling.textContent.trim(),
+                type: "registered",
+            }));
+
+            const selectedUnregisteredParticipants = Array.from(
+                document.querySelectorAll(
+                    'input[name="unregistered_participants"]:checked',
+                ),
+            ).map((checkbox) => ({
+                id: checkbox.value,
+                name: checkbox.nextElementSibling.textContent
+                    .trim()
+                    .replace(" Unregistered", ""),
+                type: "unregistered",
+            }));
+
+            const selectedParticipants = [
+                ...selectedRegisteredParticipants,
+                ...selectedUnregisteredParticipants,
+            ];
+
+            // Add participant options to the select dropdown
+            const selectElement = newItem.querySelector(
+                ".item-participants-select",
+            );
+
+            // First, add all registered participants
+            if (selectedRegisteredParticipants.length > 0) {
+                const registeredGroup = document.createElement("optgroup");
+                registeredGroup.label = "Registered Users";
+
+                selectedRegisteredParticipants.forEach((participant) => {
+                    const option = document.createElement("option");
+                    option.value = participant.id;
+                    option.textContent = participant.name;
+                    option.selected = true; // Select by default
+                    registeredGroup.appendChild(option);
+                });
+
+                selectElement.appendChild(registeredGroup);
+            }
+
+            // Then, add all unregistered participants
+            if (selectedUnregisteredParticipants.length > 0) {
+                const unregisteredGroup = document.createElement("optgroup");
+                unregisteredGroup.label = "Unregistered Participants";
+
+                selectedUnregisteredParticipants.forEach((participant) => {
+                    const option = document.createElement("option");
+                    option.value = "unregistered_" + participant.id;
+                    option.textContent = participant.name;
+                    option.selected = true; // Select by default
+                    unregisteredGroup.appendChild(option);
+                });
+
+                selectElement.appendChild(unregisteredGroup);
+            }
+
+            // Add change event listener to the select element
+            selectElement.addEventListener("change", updateItemizedSplitTotals);
+
+            // Add the new item to the container
+            itemsContainer.appendChild(newItem);
+
+            // Update item count
+            updateItemCount();
+            updateItemizedSplitTotals();
+        }
+
+        function updateItemParticipants() {
+            const items = document.querySelectorAll(".item-card");
+
+            // Get all selected participants (both registered and unregistered)
+            const selectedRegisteredParticipants = Array.from(
+                document.querySelectorAll('input[name="participants"]:checked'),
+            ).map((checkbox) => ({
+                id: checkbox.value,
+                name: checkbox.nextElementSibling.textContent.trim(),
+                type: "registered",
+            }));
+
+            const selectedUnregisteredParticipants = Array.from(
+                document.querySelectorAll(
+                    'input[name="unregistered_participants"]:checked',
+                ),
+            ).map((checkbox) => ({
+                id: checkbox.value,
+                name: checkbox.nextElementSibling.textContent
+                    .trim()
+                    .replace(" Unregistered", ""),
+                type: "unregistered",
+            }));
+
+            const selectedParticipants = [
+                ...selectedRegisteredParticipants,
+                ...selectedUnregisteredParticipants,
+            ];
+
+            items.forEach((item, itemIndex) => {
+                const selectElement = item.querySelector(
+                    ".item-participants-select",
+                );
+
+                // Store previously selected values to restore them after updating options
+                const previouslySelected = Array.from(
+                    selectElement.selectedOptions,
+                ).map((option) => option.value);
+
+                // Clear current options
+                selectElement.innerHTML = "";
+
+                // First, add all registered participants
+                if (selectedRegisteredParticipants.length > 0) {
+                    const registeredGroup = document.createElement("optgroup");
+                    registeredGroup.label = "Registered Users";
+
+                    selectedRegisteredParticipants.forEach((participant) => {
+                        const option = document.createElement("option");
+                        option.value = participant.id;
+                        option.textContent = participant.name;
+                        option.selected =
+                            previouslySelected.includes(participant.id) ||
+                            previouslySelected.length === 0;
+                        registeredGroup.appendChild(option);
+                    });
+
+                    selectElement.appendChild(registeredGroup);
+                }
+
+                // Then, add all unregistered participants
+                if (selectedUnregisteredParticipants.length > 0) {
+                    const unregisteredGroup =
+                        document.createElement("optgroup");
+                    unregisteredGroup.label = "Unregistered Participants";
+
+                    selectedUnregisteredParticipants.forEach((participant) => {
+                        const option = document.createElement("option");
+                        option.value = "unregistered_" + participant.id;
+                        option.textContent = participant.name;
+                        option.selected =
+                            previouslySelected.includes(
+                                "unregistered_" + participant.id,
+                            ) || previouslySelected.length === 0;
+                        unregisteredGroup.appendChild(option);
+                    });
+
+                    selectElement.appendChild(unregisteredGroup);
+                }
+
+                // Add change event listener
+                selectElement.name = `item_participants_${itemIndex}`;
+                selectElement.addEventListener(
+                    "change",
+                    updateItemizedSplitTotals,
+                );
+            });
+
+            // Update form fields for submission
+            updateItemFormFields();
+        }
+
+        function updateItemCount() {
+            const items = document.querySelectorAll(".item-card");
+            itemCountInput.value = items.length;
+        }
+
+        function updateItemFormFields() {
+            const items = document.querySelectorAll(".item-card");
+
+            items.forEach((item, index) => {
+                const nameInput = item.querySelector(".item-name");
+                const priceInput = item.querySelector(".item-price");
+                const selectElement = item.querySelector(
+                    ".item-participants-select",
+                );
+
+                // Update name attributes for form submission
+                nameInput.name = `item_name_${index}`;
+                priceInput.name = `item_price_${index}`;
+                selectElement.name = `item_participants_${index}`;
+
+                // Create hidden inputs for unregistered participants
+                const selectedUnregistered = Array.from(
+                    selectElement.selectedOptions,
+                )
+                    .filter((option) =>
+                        option.value.startsWith("unregistered_"),
+                    )
+                    .map((option) => option.value.replace("unregistered_", ""));
+
+                // Remove any existing hidden inputs for unregistered
+                const existingInputs = item.querySelectorAll(
+                    'input[name^="item_unregistered_"]',
+                );
+                existingInputs.forEach((input) => input.remove());
+
+                // Add new hidden inputs for each unregistered participant
+                selectedUnregistered.forEach((name) => {
+                    const hiddenInput = document.createElement("input");
+                    hiddenInput.type = "hidden";
+                    hiddenInput.name = `item_unregistered_${index}`;
+                    hiddenInput.value = name;
+                    item.appendChild(hiddenInput);
+                });
+            });
+        }
+
+        function updateItemizedSplitTotals() {
+            const amount = parseFloat(amountInput.value) || 0;
+            const totalItemPrices = calculateItemizedSplitTotal();
+
+            document.getElementById("itemizedSplitTotal").textContent =
+                totalItemPrices.toFixed(2);
+            document.getElementById("itemizedSplitExpenseAmount").textContent =
+                amount.toFixed(2);
+            document.getElementById("itemizedSplitDifference").textContent =
+                Math.abs(totalItemPrices - amount).toFixed(2);
+
+            // Highlight difference if not zero
+            const differenceSpan = document.getElementById(
+                "itemizedSplitDifference",
+            );
+            if (Math.abs(totalItemPrices - amount) > 0.01) {
+                differenceSpan.className = "text-danger";
+            } else {
+                differenceSpan.className = "text-success";
+            }
+
+            // Update form fields for submission
+            updateItemFormFields();
+        }
+
+        function calculateItemizedSplitTotal() {
+            const priceInputs = document.querySelectorAll(".item-price");
+            let total = 0;
+
+            priceInputs.forEach((input) => {
+                total += parseFloat(input.value) || 0;
+            });
+
+            return total;
+        }
+    });
+</script>
+{% endblock %}

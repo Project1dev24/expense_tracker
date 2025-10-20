@@ -1,0 +1,364 @@
+{% extends "base.html" %}
+
+{% block title %}Trip Expense Tracker - Creative Design{% endblock %}
+
+{% block content %}
+<!-- Futuristic Hero Section with Improved Particles -->
+<div class="hero-futuristic">
+  <!-- Enhanced Animated Particle Background -->
+  <div class="particle-bg">
+    <div class="particle particle-lg"></div>
+    <div class="particle particle-md"></div>
+    <div class="particle particle-sm"></div>
+    <div class="particle particle-xs"></div>
+    <div class="particle particle-lg"></div>
+    <div class="particle particle-md"></div>
+    <div class="particle particle-sm"></div>
+    <div class="particle particle-xs"></div>
+  </div>
+  
+  <div class="container position-relative z-3">
+    <div class="row align-items-center justify-content-center min-vh-100">
+      <div class="col-lg-8 text-center">
+        <!-- Dark Mode Toggle -->
+        <div class="position-absolute top-0 end-0 mt-4 me-4">
+          <button id="darkModeToggle" class="btn btn-outline-light rounded-circle">
+            <i class="fas fa-moon"></i>
+          </button>
+        </div>
+        
+        <h1 class="display-1 fw-bold neon-glow mb-4 text-gradient" data-text="EXPENSE TRACKER">
+          EXPENSE TRACKER
+        </h1>
+        <p class="lead fs-3 text-white mb-5 typing-animation">
+          The Future of Group Expense Management
+        </p>
+        
+        <!-- Enhanced Holographic Card with Interactive Elements -->
+        <div class="holographic-card p-5 mb-5 tilt-effect">
+          <h2 class="holo-text mb-4" data-text="Revolutionary Expense Tracking">
+            Revolutionary Expense Tracking
+          </h2>
+          <p class="text-white mb-4">
+            Experience the next generation of group expense management with our AI-powered platform
+          </p>
+          
+          <!-- Enhanced 3D Expense Visualization -->
+          <div class="expense-3d-container mb-4">
+            <div class="expense-cube rotate">
+              <div class="expense-face">₹12K</div>
+              <div class="expense-face">4 People</div>
+              <div class="expense-face">Equal Split</div>
+              <div class="expense-face">₹3K Each</div>
+              <div class="expense-face">Settled</div>
+              <div class="expense-face">Smart</div>
+            </div>
+          </div>
+          
+          <div class="d-flex flex-wrap justify-content-center gap-3">
+            <a href="{{ url_for('auth.register') }}" class="glow-button pulse-animation">
+              <i class="fas fa-rocket me-2"></i>Start Free Trial
+            </a>
+            <a href="{{ url_for('auth.login') }}" class="glow-button">
+              <i class="fas fa-sign-in-alt me-2"></i>Login
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ... existing code ... -->
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/creative-design.css') }}">
+<style>
+  body {
+    background: #0a0a0a;
+    color: white;
+    transition: all 0.3s ease;
+  }
+  
+  .bg-dark {
+    background-color: #121212 !important;
+  }
+  
+  /* Enhanced Particle Animation */
+  .particle-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+  }
+  
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    animation: float 15s infinite linear;
+  }
+  
+  .particle-lg {
+    width: 100px;
+    height: 100px;
+    animation-duration: 25s;
+  }
+  
+  .particle-md {
+    width: 60px;
+    height: 60px;
+    animation-duration: 20s;
+  }
+  
+  .particle-sm {
+    width: 30px;
+    height: 30px;
+    animation-duration: 15s;
+  }
+  
+  .particle-xs {
+    width: 15px;
+    height: 15px;
+    animation-duration: 10s;
+  }
+  
+  @keyframes float {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      transform: translate(100vw, -100vh) rotate(360deg);
+      opacity: 0;
+    }
+  }
+  
+  /* Enhanced Text Gradient */
+  .text-gradient {
+    background: linear-gradient(45deg, #ff4d4d, #7b68ee, #3498db, #2ecc71);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient 8s ease infinite;
+  }
+  
+  @keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  /* Enhanced Holographic Card */
+  .holographic-card {
+    background: rgba(30, 30, 50, 0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.3);
+    transition: all 0.5s ease;
+  }
+  
+  .tilt-effect {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+  }
+  
+  .tilt-effect:hover {
+    transform: scale(1.02) translateY(-5px);
+    box-shadow: 0 15px 40px rgba(31, 38, 135, 0.5);
+  }
+  
+  /* Enhanced Glow Button */
+  .glow-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background: linear-gradient(45deg, #4e73df, #224abe);
+    color: white;
+    border-radius: 50px;
+    font-weight: bold;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: all 0.3s ease;
+    border: none;
+    margin: 5px;
+  }
+  
+  .glow-button:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #4e73df, #224abe, #4e73df);
+    background-size: 200% 200%;
+    animation: glowing 3s linear infinite;
+    z-index: -1;
+    transition: all 0.3s ease;
+    border-radius: 50px;
+  }
+  
+  .glow-button:hover {
+    transform: translateY(-3px);
+    color: white;
+    box-shadow: 0 5px 15px rgba(78, 115, 223, 0.4);
+  }
+  
+  @keyframes glowing {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  /* Pulse Animation */
+  .pulse-animation {
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(78, 115, 223, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(78, 115, 223, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(78, 115, 223, 0); }
+  }
+  
+  /* Typing Animation */
+  .typing-animation {
+    overflow: hidden;
+    border-right: 3px solid white;
+    white-space: nowrap;
+    margin: 0 auto;
+    animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+  }
+  
+  @keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+  }
+  
+  @keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: white }
+  }
+  
+  /* Dark Mode Styles */
+  body.dark-mode {
+    background: #0a0a0a;
+  }
+  
+  body.light-mode {
+    background: #f8f9fa;
+    color: #333;
+  }
+  
+  body.light-mode .hero-futuristic {
+    background: linear-gradient(135deg, #e0e0e0, #f8f9fa);
+  }
+  
+  body.light-mode .holographic-card {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  body.light-mode .text-white {
+    color: #333 !important;
+  }
+  
+  body.light-mode .neon-glow {
+    text-shadow: none;
+    color: #333;
+  }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Interactive tracker functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Dark Mode Toggle
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const body = document.body;
+    
+    // Check for saved dark mode preference
+    if (localStorage.getItem('darkMode') === 'disabled') {
+      body.classList.remove('dark-mode');
+      body.classList.add('light-mode');
+      darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+    }
+    
+    darkModeToggle.addEventListener('click', function() {
+      body.classList.toggle('dark-mode');
+      body.classList.toggle('light-mode');
+      
+      if (body.classList.contains('light-mode')) {
+        localStorage.setItem('darkMode', 'disabled');
+        darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+      } else {
+        localStorage.setItem('darkMode', 'enabled');
+        darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+      }
+    });
+    
+    // Tilt effect for cards
+    const tiltCards = document.querySelectorAll('.tilt-effect');
+    
+    tiltCards.forEach(card => {
+      card.addEventListener('mousemove', function(e) {
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const angleX = (y - centerY) / 20;
+        const angleY = (centerX - x) / 20;
+        
+        this.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) scale3d(1.02, 1.02, 1.02)`;
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+      });
+    });
+    
+    // Interactive tracker functionality
+    const markers = document.querySelectorAll('.tracker-marker');
+    const progress = document.getElementById('trackerProgress');
+    
+    if (markers.length && progress) {
+      markers.forEach(marker => {
+        marker.addEventListener('click', function() {
+          const progressValue = this.getAttribute('data-progress');
+          progress.style.width = progressValue + '%';
+          
+          // Remove active class from all markers
+          markers.forEach(m => m.classList.remove('active'));
+          
+          // Add active class to clicked marker
+          this.classList.add('active');
+        });
+      });
+      
+      // Animate the tracker on page load
+      setTimeout(() => {
+        progress.style.width = '100%';
+        markers[markers.length - 1].classList.add('active');
+      }, 1000);
+    }
+  });
+</script>
+{% endblock %}

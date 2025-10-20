@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Design Showcase</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: white;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .hero-section {
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .btn-custom {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        
+        .btn-custom:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+        
+        .neon-text {
+            color: #fff;
+            text-shadow: 
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 20px #ff6b6b,
+                0 0 40px #ff6b6b,
+                0 0 80px #ff6b6b;
+            animation: neonPulse 2s infinite alternate;
+        }
+        
+        @keyframes neonPulse {
+            from {
+                text-shadow: 
+                    0 0 5px #fff,
+                    0 0 10px #fff,
+                    0 0 20px #ff6b6b,
+                    0 0 40px #ff6b6b,
+                    0 0 80px #ff6b6b;
+            }
+            to {
+                text-shadow: 
+                    0 0 10px #fff,
+                    0 0 20px #fff,
+                    0 0 30px #ff6b6b,
+                    0 0 50px #ff6b6b,
+                    0 0 70px #ff6b6b;
+            }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        footer {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="display-2 fw-bold neon-text mb-4">Creative Design Showcase</h1>
+            <p class="lead fs-3 mb-5">Experience the future of expense tracking with innovative design elements</p>
+            
+            <div class="floating mb-5">
+                <i class="fas fa-rocket fa-5x"></i>
+            </div>
+            
+            <div class="mt-5">
+                <a href="creative-demo.html" class="btn-custom btn-lg">
+                    <i class="fas fa-play-circle me-2"></i>View Interactive Demo
+                </a>
+                <a href="../templates/main/creative_index.html" class="btn-custom btn-lg">
+                    <i class="fas fa-code me-2"></i>View Template Code
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="display-4 fw-bold">Innovative Features</h2>
+                <p class="lead">Cutting-edge design elements that transform user experience</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <h3 class="mb-3">3D Visualization</h3>
+                    <p>Interactive 3D expense cube that responds to mouse movement and provides dynamic data visualization.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-sparkles"></i>
+                    </div>
+                    <h3 class="mb-3">Particle System</h3>
+                    <p>Animated floating particles that create depth and visual interest in the background.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-glass-martini"></i>
+                    </div>
+                    <h3 class="mb-3">Glass Morphism</h3>
+                    <p>Holographic cards with frosted glass effect and interactive tilt responses.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-neon"></i>
+                    </div>
+                    <h3 class="mb-3">Neon Glow Effects</h3>
+                    <p>Pulsating text effects that grab attention and create a futuristic aesthetic.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <h3 class="mb-3">Interactive Tracker</h3>
+                    <p>Visual progress tracker with clickable markers that show expense settlement journey.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shapes"></i>
+                    </div>
+                    <h3 class="mb-3">Morphing Shapes</h3>
+                    <p>Dynamic geometric forms that continuously transform and cycle through colors.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technical Details -->
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="display-4 fw-bold">Technical Excellence</h2>
+                <p class="lead">Built with modern web technologies and performance in mind</p>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="feature-card">
+                    <h3 class="mb-4 text-center">Implementation Details</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Modern CSS:</strong> Uses backdrop-filter, 3D transforms, and CSS variables
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Vanilla JavaScript:</strong> No external libraries, lightweight and efficient
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Responsive Design:</strong> Works on all device sizes with graceful degradation
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Performance Optimized:</strong> Hardware-accelerated animations and efficient code
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Accessible:</strong> Semantic HTML and keyboard navigable elements
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="container py-5 text-center">
+        <h2 class="display-4 fw-bold mb-4">Ready to Transform Your Application?</h2>
+        <p class="lead mb-5">Integrate these creative elements into your expense tracker for an unforgettable user experience.</p>
+        
+        <div class="mt-4">
+            <a href="creative-demo.html" class="btn-custom btn-lg">
+                <i class="fas fa-rocket me-2"></i>Experience the Demo
+            </a>
+            <a href="css/creative-design.css" class="btn-custom btn-lg">
+                <i class="fas fa-file-code me-2"></i>View CSS
+            </a>
+            <a href="js/creative-interactions.js" class="btn-custom btn-lg">
+                <i class="fas fa-js me-2"></i>View JavaScript
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="mb-0">&copy; 2025 Expense Tracker Creative Design Showcase</p>
+                    <p class="small text-muted mt-2">
+                        This showcase demonstrates innovative UI/UX design concepts for the Expense Tracker application.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

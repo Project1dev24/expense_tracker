@@ -1,0 +1,446 @@
+{% extends "base.html" %} {% block title %}Expenses for {{ trip.name }} - Trip
+Expense Tracker{% endblock %} {% block styles %}
+<style>
+    :root {
+        --body-bg: #f4f1ea;
+        --panel-bg: #ffffff;
+        --border-color: #000000;
+        --theme-accent-color: #aec6cf; /* Default: Pastel Blue */
+        --theme-contrast-color: #000000; /* Default for light accent */
+        --secondary-action-color: #85a0aa; /* Default: Darkened Pastel Blue */
+        --border-width: 2px;
+        --shadow-offset: 5px;
+    }
+
+    body {
+        background-color: var(--body-bg);
+        font-family:
+            -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+            Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+            "Segoe UI Symbol";
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .fw-bold {
+        font-weight: 700 !important;
+        color: var(--border-color);
+    }
+
+    .btn {
+        border: var(--border-width) solid var(--border-color);
+        box-shadow: 3px 3px 0px var(--border-color);
+        border-radius: 0.5rem;
+        font-weight: 700;
+        transition: all 0.15s ease-out;
+        padding: 0.5rem 1rem;
+    }
+
+    .btn:hover {
+        /* No specific hover transform/shadow */
+    }
+
+    .btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0px var(--border-color);
+    }
+
+    .btn-primary {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-primary:hover,
+    .btn-primary:focus,
+    a.btn-primary:hover,
+    a.btn-primary:focus,
+    .btn-group .btn-primary:hover,
+    .btn-group .btn-primary:focus,
+    .btn-group a.btn-primary:hover,
+    .btn-group a.btn-primary:focus {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important; /* Darker hover effect */
+        border-color: var(--border-color) !important;
+    }
+    .btn-primary:active,
+    a.btn-primary:active,
+    .btn-group .btn-primary:active,
+    .btn-group a.btn-primary:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    /* Enhanced styles for outline buttons to maintain theme colors */
+    .btn-outline-primary {
+        color: var(--border-color) !important;
+        border-color: var(--border-color) !important;
+        background-color: transparent !important;
+    }
+
+    /* All possible states for btn-outline-primary */
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus,
+    .btn-outline-primary.active,
+    .btn-outline-primary.dropdown-toggle.show,
+    a.btn-outline-primary:hover,
+    a.btn-outline-primary:focus,
+    a.btn-outline-primary.active,
+    a.btn-outline-primary.dropdown-toggle.show,
+    .btn-group .btn-outline-primary:hover,
+    .btn-group .btn-outline-primary:focus,
+    .btn-group .btn-outline-primary:active,
+    .btn-group .btn-outline-primary.active,
+    .btn-group .btn-outline-primary.dropdown-toggle.show,
+    .btn-group a.btn-outline-primary:hover,
+    .btn-group a.btn-outline-primary:focus,
+    .btn-group a.btn-outline-primary:active,
+    .btn-group a.btn-outline-primary.active,
+    .btn-group a.btn-outline-primary.dropdown-toggle.show,
+    .btn-group-sm .btn-outline-primary:hover,
+    .btn-group-sm .btn-outline-primary:focus,
+    .btn-group-sm .btn-outline-primary:active,
+    .btn-group-sm .btn-outline-primary.active,
+    .btn-group-sm .btn-outline-primary.dropdown-toggle.show,
+    .btn-group-sm a.btn-outline-primary:hover,
+    .btn-group-sm a.btn-outline-primary:focus,
+    .btn-group-sm a.btn-outline-primary.active,
+    .btn-group-sm a.btn-outline-primary.active,
+    .btn-group-sm a.btn-outline-primary.dropdown-toggle.show,
+    .w-100 .btn-outline-primary:hover,
+    .w-100 .btn-outline-primary:focus,
+    .w-100 .btn-outline-primary:active,
+    .w-100 .btn-outline-primary.active,
+    .w-100 .btn-outline-primary.dropdown-toggle.show,
+    .w-100 a.btn-outline-primary:hover,
+    .w-100 a.btn-outline-primary:focus,
+    .w-100 a.btn-outline-primary.active,
+    .w-100 a.btn-outline-primary.active,
+    .w-100 a.btn-outline-primary.dropdown-toggle.show {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    /* Focus states */
+    .btn-check:focus + .btn-outline-primary,
+    .btn-outline-primary:focus,
+    .btn-outline-primary.focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    .btn-warning {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-warning:hover,
+    .btn-warning:focus,
+    a.btn-warning:hover,
+    a.btn-warning:focus,
+    .btn-group .btn-warning:hover,
+    .btn-group .btn-warning:focus,
+    .btn-group a.btn-warning:hover,
+    .btn-group a.btn-warning:focus {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-warning:active,
+    a.btn-warning:active,
+    .btn-group .btn-warning:active,
+    .btn-group a.btn-warning:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-check:focus + .btn-warning,
+    .btn-warning:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    .btn-secondary {
+        background-color: var(--secondary-action-color);
+        color: var(--theme-contrast-color);
+        border-color: var(--border-color);
+    }
+    .btn-secondary:hover {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel {
+        background-color: var(--panel-bg);
+        border: var(--border-width) solid var(--border-color);
+        border-radius: 1rem;
+        box-shadow: var(--shadow-offset) var(--shadow-offset) 0px
+            var(--border-color);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* Ensures children conform to rounded corners */
+    }
+
+    .panel-header {
+        padding: 0.75rem 1.25rem;
+        border-bottom: var(--border-width) solid var(--border-color);
+        background-color: var(--theme-accent-color);
+    }
+    .panel-header h5,
+    .panel-header h4 {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel-body {
+        padding: 1rem;
+        flex-grow: 1;
+    }
+</style>
+{% endblock %} {% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1 class="mb-2">Expenses</h1>
+        <p class="text-muted">
+            <a href="{{ url_for('trips.view_trip', trip_id=trip.id) }}"
+                >{{ trip.name }}</a
+            >
+            <i class="fas fa-calendar ms-3 me-1"></i>
+            {{ trip.start_date.strftime('%d %b %Y') }} - {{
+            trip.end_date.strftime('%d %b %Y') }}
+        </p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a
+            href="{{ url_for('expenses.add_expense', trip_id=trip.id) }}"
+            class="btn btn-primary"
+        >
+            <i class="fas fa-plus me-2"></i>Add Expense
+        </a>
+    </div>
+</div>
+
+{% if expenses %}
+<div class="panel">
+    <div class="panel-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">All Expenses</h5>
+            <span class="badge bg-light text-dark"
+                >Total: ₹{{ trip.calculate_total_expenses()|round(2) }}</span
+            >
+        </div>
+    </div>
+    <div class="panel-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Paid By</th>
+                        <th>Split Method</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expense in expenses %}
+                    <tr>
+                        <td>{{ expense.date.strftime('%d %b %Y') }}</td>
+                        <td>{{ expense.description }}</td>
+                        <td>₹{{ expense.amount|round(2) }}</td>
+                        <td>
+                            {% if expense.payer_id == current_user.id %}
+                            <span class="badge bg-primary">You</span>
+                            {% else %} {% set payer_id_str =
+                            expense.payer_id|string %} {% if payer_id_str ==
+                            'group_everyone' %}
+                            <span class="badge bg-warning"
+                                >Everyone (Group Payment)</span
+                            >
+                            {% elif payer_id_str.startswith('unregistered_') %}
+                            <span class="badge bg-info"
+                                >{{ user_map.get(payer_id_str,
+                                payer_id_str.replace('unregistered_', ''))
+                                }}</span
+                            >
+                            <small class="d-block text-muted mt-1"
+                                >Unregistered</small
+                            >
+                            {% else %}
+                            <span class="badge bg-success"
+                                >{{ user_map.get(payer_id_str, 'Unknown')
+                                }}</span
+                            >
+                            {% endif %} {% endif %}
+                        </td>
+                        <td>
+                            {% if expense.split_method == 'equal' %}
+                            <span class="badge bg-info">Equal</span>
+                            {% elif expense.split_method == 'exact' %}
+                            <span class="badge bg-warning">Exact</span>
+                            {% elif expense.split_method == 'itemized' %}
+                            <span class="badge bg-success">Itemized</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a
+                                    href="{{ url_for('expenses.view_expense', trip_id=trip.id, expense_id=expense.id) }}"
+                                    class="btn btn-primary"
+                                >
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                {% if expense.payer_id == current_user.id or
+                                trip.admin_id == current_user.id %}
+                                <a
+                                    href="{{ url_for('expenses.edit_expense', trip_id=trip.id, expense_id=expense.id) }}"
+                                    class="btn btn-primary"
+                                >
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button
+                                    type="button"
+                                    class="btn btn-danger"
+                                    onclick="showDeleteModal({{ expense.id }}, '{{ expense.description|e }}', {{ expense.amount }}, {{ trip.id }})"
+                                    title="Delete Expense"
+                                >
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Single Delete Confirmation Modal -->
+<div
+    class="modal fade"
+    id="deleteModal"
+    tabindex="-1"
+    aria-labelledby="deleteModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    Delete Expense
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this expense?</p>
+                <p>
+                    <strong>Description:</strong>
+                    <span id="expenseDescription"></span>
+                </p>
+                <p>
+                    <strong>Amount:</strong> ₹<span id="expenseAmount"></span>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+                    Cancel
+                </button>
+                <form id="deleteForm" method="POST">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Function to show delete modal with expense details
+    function showDeleteModal(expenseId, description, amount, tripId) {
+        // Set the expense details in the modal
+        document.getElementById("expenseDescription").textContent = description;
+        document.getElementById("expenseAmount").textContent =
+            amount.toFixed(2);
+
+        // Set the form action URL using Flask's url_for
+        const form = document.getElementById("deleteForm");
+        form.action =
+            '{{ url_for("expenses.delete_expense", trip_id=0, expense_id=0) }}'.replace(
+                "/0/expenses/0",
+                "/" + tripId + "/expenses/" + expenseId,
+            );
+
+        // Show the modal
+        const modal = new bootstrap.Modal(
+            document.getElementById("deleteModal"),
+        );
+        modal.show();
+    }
+
+    // Prevent modal backdrop issues
+    document.addEventListener("DOMContentLoaded", function () {
+        // Remove any duplicate backdrops when modal is shown
+        document
+            .getElementById("deleteModal")
+            .addEventListener("show.bs.modal", function () {
+                // Remove any existing backdrops
+                document
+                    .querySelectorAll(".modal-backdrop")
+                    .forEach(function (backdrop) {
+                        backdrop.remove();
+                    });
+            });
+
+        // Ensure proper backdrop when modal is fully shown
+        document
+            .getElementById("deleteModal")
+            .addEventListener("shown.bs.modal", function () {
+                // Add backdrop if missing
+                if (document.querySelectorAll(".modal-backdrop").length === 0) {
+                    const backdrop = document.createElement("div");
+                    backdrop.className = "modal-backdrop fade show";
+                    document.body.appendChild(backdrop);
+                }
+            });
+
+        // Clean up backdrop when modal is hidden
+        document
+            .getElementById("deleteModal")
+            .addEventListener("hidden.bs.modal", function () {
+                // Remove backdrop
+                document
+                    .querySelectorAll(".modal-backdrop")
+                    .forEach(function (backdrop) {
+                        backdrop.remove();
+                    });
+
+                // Reset body styles
+                document.body.style.overflow = "";
+                document.body.style.paddingRight = "";
+            });
+    });
+</script>
+{% else %}
+<div class="text-center p-5 bg-light rounded">
+    <h3 class="mb-3">No expenses yet</h3>
+    <p class="mb-4">Start by adding your first expense to this trip.</p>
+    <a
+        href="{{ url_for('expenses.add_expense', trip_id=trip.id) }}"
+        class="btn btn-primary"
+    >
+        <i class="fas fa-plus me-2"></i>Add Expense
+    </a>
+</div>
+{% endif %} {% endblock %}

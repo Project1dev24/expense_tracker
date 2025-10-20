@@ -1,0 +1,299 @@
+{% extends "base.html" %} {% block title %}Trip Expense Tracker - Welcome{%
+endblock %} {% block styles %}
+<style>
+    :root {
+        --body-bg: #f4f1ea;
+        --panel-bg: #ffffff;
+        --border-color: #000000;
+        --theme-accent-color: #aec6cf; /* Default: Pastel Blue */
+        --theme-contrast-color: #000000; /* Default for light accent */
+        --secondary-action-color: #85a0aa; /* Default: Darkened Pastel Blue */
+        --border-width: 2px;
+        --shadow-offset: 5px;
+    }
+
+    body {
+        background-color: var(--body-bg);
+        font-family:
+            -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+            Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+            "Segoe UI Symbol";
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .fw-bold {
+        font-weight: 700 !important;
+        color: var(--border-color);
+    }
+
+    .btn {
+        border: var(--border-width) solid var(--border-color);
+        box-shadow: 3px 3px 0px var(--border-color);
+        border-radius: 0.5rem;
+        font-weight: 700;
+        transition: all 0.15s ease-out;
+        padding: 0.5rem 1rem;
+    }
+
+    .btn:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 5px 5px 0px var(--border-color);
+    }
+
+    .btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0px var(--border-color);
+    }
+
+    .btn-primary {
+        background-color: var(--theme-accent-color);
+        color: var(--theme-contrast-color);
+        border-color: var(--border-color);
+    }
+    .btn-primary:hover {
+        color: var(--theme-contrast-color);
+    }
+
+    .btn-secondary {
+        background-color: var(--secondary-action-color);
+        color: var(--theme-contrast-color);
+        border-color: var(--border-color);
+    }
+    .btn-secondary:hover {
+        color: var(--theme-contrast-color);
+    }
+
+    .hero {
+        padding: 6rem 0;
+        text-align: center;
+    }
+
+    .features {
+        padding: 4rem 0;
+    }
+
+    .feature-card {
+        background-color: var(--panel-bg);
+        border: var(--border-width) solid var(--border-color);
+        border-radius: 1rem;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: var(--shadow-offset) var(--shadow-offset) 0px
+            var(--border-color);
+        height: 100%;
+    }
+
+    .how-it-works {
+        padding: 4rem 0;
+        background-color: var(--panel-bg);
+        border: var(--border-width) solid var(--border-color);
+        border-radius: 1rem;
+        box-shadow: var(--shadow-offset) var(--shadow-offset) 0px
+            var(--border-color);
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .roadmap-container {
+        position: relative;
+        padding: 2rem 0;
+    }
+
+    .roadmap-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: var(--border-width);
+        height: 100%;
+        background-color: var(--border-color);
+        transform: translateX(-50%);
+    }
+
+    .roadmap-step {
+        position: relative;
+        width: 50%;
+        padding: 1rem 40px;
+        box-sizing: border-box;
+    }
+
+    .roadmap-step:nth-child(odd) {
+        left: 0;
+        text-align: right;
+    }
+
+    .roadmap-step:nth-child(even) {
+        left: 50%;
+        text-align: left;
+    }
+
+    .roadmap-icon {
+        position: absolute;
+        top: 15px; /* Align with the top of the content box */
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: var(--theme-accent-color);
+        color: var(--theme-contrast-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: var(--border-width) solid var(--border-color);
+        box-shadow: 3px 3px 0px var(--border-color);
+        z-index: 1;
+    }
+
+    .roadmap-step:nth-child(odd) .roadmap-icon {
+        right: -30px;
+    }
+
+    .roadmap-step:nth-child(even) .roadmap-icon {
+        left: -30px;
+    }
+
+    .roadmap-content {
+        padding: 20px 30px;
+        background-color: var(--panel-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 1rem;
+        box-shadow: 3px 3px 0px var(--border-color);
+    }
+
+    @media (max-width: 767px) {
+        .roadmap-container::before {
+            left: 30px;
+            transform: translateX(0);
+        }
+
+        .roadmap-step,
+        .roadmap-step:nth-child(even) {
+            width: 100%;
+            left: 0;
+            padding-left: 80px;
+            padding-right: 15px;
+            text-align: left;
+        }
+
+        .roadmap-icon,
+        .roadmap-step:nth-child(odd) .roadmap-icon,
+        .roadmap-step:nth-child(even) .roadmap-icon {
+            left: 30px;
+            transform: translateX(-50%);
+        }
+    }
+</style>
+{% endblock %} {% block content %}
+<div class="hero">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-4">
+            Effortless Expense Tracking for Groups
+        </h1>
+        <p class="lead fs-5 mb-4 text-muted">
+            Focus on the memories, not the money. Our app simplifies group
+            expenses, making it easy to track who paid for what.
+        </p>
+        <div class="d-flex flex-wrap gap-3 justify-content-center">
+            <a
+                href="{{ url_for('auth.register') }}"
+                class="btn btn-primary btn-lg px-4 py-3"
+            >
+                <i class="fas fa-user-plus me-2"></i>Get Started for Free
+            </a>
+            <a
+                href="{{ url_for('auth.login') }}"
+                class="btn btn-secondary btn-lg px-4 py-3"
+            >
+                <i class="fas fa-sign-in-alt me-2"></i>I Have an Account
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="features">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="feature-card">
+                    <i class="fas fa-file-invoice-dollar fa-3x mb-3"></i>
+                    <h5 class="fw-bold">Easy Expense Logging</h5>
+                    <p>
+                        Quickly add expenses and attach receipts. Our intuitive
+                        interface makes it a breeze.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="feature-card">
+                    <i class="fas fa-calculator fa-3x mb-3"></i>
+                    <h5 class="fw-bold">Smart Settlement</h5>
+                    <p>
+                        Automatically calculate who owes who. No more manual
+                        math or awkward conversations.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="feature-card">
+                    <i class="fas fa-file-pdf fa-3x mb-3"></i>
+                    <h5 class="fw-bold">PDF Reports</h5>
+                    <p>
+                        Generate detailed PDF reports for your trips, perfect
+                        for sharing and record-keeping.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="how-it-works">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">How It Works</h2>
+        <div class="roadmap-container">
+            <!-- Step 1 -->
+            <div class="roadmap-step">
+                <div class="roadmap-icon">
+                    <i class="fas fa-plus-circle fa-2x"></i>
+                </div>
+                <div class="roadmap-content">
+                    <h5 class="fw-bold">1. Create a Trip</h5>
+                    <p>
+                        Start by creating a new trip and inviting your friends.
+                    </p>
+                </div>
+            </div>
+            <!-- Step 2 -->
+            <div class="roadmap-step">
+                <div class="roadmap-icon">
+                    <i class="fas fa-money-bill-wave fa-2x"></i>
+                </div>
+                <div class="roadmap-content">
+                    <h5 class="fw-bold">2. Add Expenses</h5>
+                    <p>
+                        Log expenses as you go. Snap a picture of the receipt
+                        and you're done.
+                    </p>
+                </div>
+            </div>
+            <!-- Step 3 -->
+            <div class="roadmap-step">
+                <div class="roadmap-icon">
+                    <i class="fas fa-handshake fa-2x"></i>
+                </div>
+                <div class="roadmap-content">
+                    <h5 class="fw-bold">3. Settle Up</h5>
+                    <p>
+                        When the trip is over, our app tells you who owes who.
+                        Settle up with a single click.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

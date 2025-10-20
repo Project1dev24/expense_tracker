@@ -1,0 +1,1327 @@
+{% extends "base.html" %} {% block title %}{{ trip.name }} - Trip Expense
+Tracker{% endblock %} {% block styles %}
+<style>
+    :root {
+        --body-bg: #f4f1ea;
+        --panel-bg: #ffffff;
+        --border-color: #000000;
+        --theme-accent-color: #aec6cf; /* Default: Pastel Blue */
+        --theme-contrast-color: #000000; /* Default for light accent */
+        --secondary-action-color: #85a0aa; /* Default: Darkened Pastel Blue */
+        --border-width: 2px;
+        --shadow-offset: 5px;
+    }
+
+    body {
+        background-color: var(--body-bg);
+        font-family:
+            -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+            Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+            "Segoe UI Symbol";
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .fw-bold {
+        font-weight: 700 !important;
+        color: var(--border-color);
+    }
+
+    .btn {
+        border: var(--border-width) solid var(--border-color);
+        box-shadow: 3px 3px 0px var(--border-color);
+        border-radius: 0.5rem;
+        font-weight: 700;
+        transition: all 0.15s ease-out;
+        padding: 0.5rem 1rem;
+    }
+
+    .btn:hover {
+        /* transform: translate(-2px, -2px); */
+        /* box-shadow: 5px 5px 0px var(--border-color); */
+    }
+
+    .btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0px var(--border-color);
+    }
+
+    .btn-primary {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-primary:hover,
+    .btn-primary:focus,
+    a.btn-primary:hover,
+    a.btn-primary:focus,
+    .btn-group .btn-primary:hover,
+    .btn-group .btn-primary:focus,
+    .btn-group a.btn-primary:hover,
+    .btn-group a.btn-primary:focus {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important; /* Darker hover effect */
+        border-color: var(--border-color) !important;
+    }
+
+    .btn-primary:active,
+    a.btn-primary:active,
+    .btn-group .btn-primary:active,
+    .btn-group a.btn-primary:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-check:focus + .btn-primary,
+    .btn-primary:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    /* Enhanced styles for outline buttons to maintain theme colors */
+    .btn-outline-primary {
+        color: var(--border-color) !important;
+        border-color: var(--border-color) !important;
+        background-color: transparent !important;
+    }
+
+    /* All possible states for btn-outline-primary */
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus,
+    .btn-outline-primary.active,
+    .btn-outline-primary.dropdown-toggle.show,
+    a.btn-outline-primary:hover,
+    a.btn-outline-primary:focus,
+    a.btn-outline-primary.active,
+    a.btn-outline-primary.dropdown-toggle.show,
+    .btn-group .btn-outline-primary:hover,
+    .btn-group .btn-outline-primary:focus,
+    .btn-group .btn-outline-primary:active,
+    .btn-group .btn-outline-primary.active,
+    .btn-group .btn-outline-primary.dropdown-toggle.show,
+    .btn-group a.btn-outline-primary:hover,
+    .btn-group a.btn-outline-primary:focus,
+    .btn-group a.btn-outline-primary:active,
+    .btn-group a.btn-outline-primary.active,
+    .btn-group a.btn-outline-primary.dropdown-toggle.show,
+    .btn-group-sm .btn-outline-primary:hover,
+    .btn-group-sm .btn-outline-primary:focus,
+    .btn-group-sm .btn-outline-primary:active,
+    .btn-group-sm .btn-outline-primary.active,
+    .btn-group-sm .btn-outline-primary.dropdown-toggle.show,
+    .btn-group-sm a.btn-outline-primary:hover,
+    .btn-group-sm a.btn-outline-primary:focus,
+    .btn-group-sm a.btn-outline-primary:active,
+    .btn-group-sm a.btn-outline-primary.active,
+    .btn-group-sm a.btn-outline-primary.dropdown-toggle.show,
+    .w-100 .btn-outline-primary:hover,
+    .w-100 .btn-outline-primary:focus,
+    .w-100 .btn-outline-primary:active,
+    .w-100 .btn-outline-primary.active,
+    .w-100 .btn-outline-primary.dropdown-toggle.show,
+    .w-100 a.btn-outline-primary:hover,
+    .w-100 a.btn-outline-primary:focus,
+    .w-100 a.btn-outline-primary:active,
+    .w-100 a.btn-outline-primary.active,
+    .w-100 a.btn-outline-primary.dropdown-toggle.show {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    /* Focus states */
+    .btn-check:focus + .btn-outline-primary,
+    .btn-outline-primary:focus,
+    .btn-outline-primary.focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    .btn-secondary {
+        background-color: var(--secondary-action-color);
+        color: var(--theme-contrast-color);
+        border-color: var(--border-color);
+    }
+    .btn-secondary:hover {
+        color: var(--theme-contrast-color);
+    }
+
+    .btn-warning {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-warning:hover,
+    .btn-warning:focus,
+    a.btn-warning:hover,
+    a.btn-warning:focus,
+    .btn-group .btn-warning:hover,
+    .btn-group .btn-warning:focus,
+    .btn-group a.btn-warning:hover,
+    .btn-group a.btn-warning:focus {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-warning:active,
+    a.btn-warning:active,
+    .btn-group .btn-warning:active,
+    .btn-group a.btn-warning:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-check:focus + .btn-warning,
+    .btn-warning:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+    
+    /* Ensure all buttons in trip view use theme colors consistently */
+    .trip-view-buttons .btn-primary,
+    .trip-view-buttons .btn-warning,
+    .trip-view-buttons .btn-outline-primary,
+    .trip-view-buttons .dropdown-toggle-split {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    /* Hover states for all buttons */
+    .trip-view-buttons .btn-primary:hover,
+    .trip-view-buttons .btn-warning:hover,
+    .trip-view-buttons .btn-outline-primary:hover,
+    .trip-view-buttons .dropdown-toggle-split:hover {
+        background-color: var(--secondary-action-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    /* Focus states for all buttons */
+    .trip-view-buttons .btn-primary:focus,
+    .trip-view-buttons .btn-warning:focus,
+    .trip-view-buttons .btn-outline-primary:focus,
+    .trip-view-buttons .dropdown-toggle-split:focus {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+    
+    /* Active states for all buttons */
+    .trip-view-buttons .btn-primary:active,
+    .trip-view-buttons .btn-warning:active,
+    .trip-view-buttons .btn-outline-primary:active,
+    .trip-view-buttons .dropdown-toggle-split:active {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    .panel {
+        background-color: var(--panel-bg);
+        border: var(--border-width) solid var(--border-color);
+        border-radius: 1rem;
+        box-shadow: var(--shadow-offset) var(--shadow-offset) 0px
+            var(--border-color);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* Ensures children conform to rounded corners */
+    }
+
+    .panel-header {
+        padding: 0.75rem 1.25rem;
+        border-bottom: var(--border-width) solid var(--border-color);
+        background-color: var(--theme-accent-color);
+    }
+    .panel-header h5,
+    .panel-header h4 {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel-body {
+        padding: 1rem;
+        flex-grow: 1;
+    }
+    
+    /* Equal height buttons on all screens */
+    @media (min-width: 768px) {
+        .trip-view-buttons .btn,
+        .trip-view-buttons form,
+        .trip-view-buttons form button,
+        .trip-view-buttons .dropdown-toggle-split {
+            height: calc(1.5em + 0.75rem + 2px) !important;
+            min-height: calc(1.5em + 0.75rem + 2px) !important;
+        }
+        
+        /* Ensure form takes up proper space */
+        .trip-view-buttons form {
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Make dropdown button slightly smaller width but same height */
+        .trip-view-buttons .dropdown-toggle-split {
+            flex: 0 0 5%;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+        
+        /* Ensure consistent text alignment for all buttons */
+        .trip-view-buttons .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        /* Ensure icon spacing is consistent */
+        .trip-view-buttons .btn i {
+            margin-right: 0.5rem;
+        }
+        
+        /* Specifically center the Add Expense button text */
+        .trip-view-buttons .btn-primary {
+            justify-content: center;
+            text-align: center;
+        }
+        
+        /* Ensure the span inside Add Expense button is centered */
+        .trip-view-buttons .btn-primary span {
+            text-align: center;
+        }
+        
+        /* Ensure the Add Expense button container is properly centered */
+        .trip-view-buttons .btn-primary {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        
+        /* Additional centering for laptop screens */
+        @media (min-width: 768px) {
+            .trip-view-buttons .btn-primary {
+                text-align: center !important;
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+        }
+            
+        /* Black theme specific styling for trip view buttons */
+        .black-theme-active .trip-view-buttons .btn-primary,
+        .black-theme-active .trip-view-buttons .btn-warning,
+        .black-theme-active .trip-view-buttons .btn-outline-primary,
+        .black-theme-active .trip-view-buttons .dropdown-toggle-split {
+            background-color: var(--theme-accent-color) !important;
+            color: var(--theme-contrast-color) !important;
+            border-color: var(--border-color) !important;
+        }
+            
+        .black-theme-active .trip-view-buttons .btn-primary:hover,
+        .black-theme-active .trip-view-buttons .btn-warning:hover,
+        .black-theme-active .trip-view-buttons .btn-outline-primary:hover,
+        .black-theme-active .trip-view-buttons .dropdown-toggle-split:hover {
+            background-color: var(--secondary-action-color) !important;
+            color: var(--theme-contrast-color) !important;
+            border-color: var(--border-color) !important;
+        }
+    }
+    
+    /* Equal width buttons on mobile */
+    @media (max-width: 767px) {
+        .trip-view-buttons .btn:not(.dropdown-toggle-split) {
+            flex: 1;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .trip-view-buttons .btn i {
+            margin-right: 0.25rem;
+        }
+        
+        .trip-view-buttons {
+            display: flex !important;
+            flex-wrap: nowrap;
+        }
+        
+        .trip-view-buttons form {
+            flex: 1;
+            display: flex;
+        }
+        
+        .trip-view-buttons form button {
+            width: 100%;
+        }
+        
+        /* Adjust dropdown button to be smaller width but same height */
+        .trip-view-buttons .dropdown-toggle-split {
+            flex: 0 0 15%;
+            padding-left: 0.25rem;
+            padding-right: 0.25rem;
+        }
+    }
+    
+    /* Ensure all buttons in the group have equal height on all screens */
+    .trip-view-buttons .btn,
+    .trip-view-buttons form button,
+    .trip-view-buttons .dropdown-toggle,
+    .trip-view-buttons .dropdown-toggle-split {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: calc(1.5em + 0.75rem + 2px);
+        min-height: calc(1.5em + 0.75rem + 2px);
+    }
+    
+    /* Ensure form elements also have consistent height */
+    .trip-view-buttons form {
+        height: calc(1.5em + 0.75rem + 2px);
+        min-height: calc(1.5em + 0.75rem + 2px);
+    }
+    
+    /* Hide text on very small screens for better fit */
+    @media (max-width: 400px) {
+        .trip-view-buttons .btn i {
+            margin-right: 0;
+        }
+        
+        /* On very small screens, make dropdown even smaller */
+        .trip-view-buttons .dropdown-toggle-split {
+            flex: 0 0 8%;
+            padding-left: 0.125rem;
+            padding-right: 0.125rem;
+        }
+        
+        /* Ensure height consistency on very small screens */
+        .trip-view-buttons .btn,
+        .trip-view-buttons form button,
+        .trip-view-buttons .dropdown-toggle-split {
+            height: calc(1.5em + 0.75rem + 2px) !important;
+            min-height: calc(1.5em + 0.75rem + 2px) !important;
+        }
+        
+        .trip-view-buttons form {
+            height: calc(1.5em + 0.75rem + 2px) !important;
+            min-height: calc(1.5em + 0.75rem + 2px) !important;
+        }
+    }
+    
+    /* Ensure form button fills container */
+    .trip-view-buttons form {
+        height: 100%;
+    }
+    
+    /* Ensure consistent height for all buttons by default */
+    .trip-view-buttons .btn,
+    .trip-view-buttons form button,
+    .trip-view-buttons .dropdown-toggle-split {
+        height: calc(1.5em + 0.75rem + 2px);
+        min-height: calc(1.5em + 0.75rem + 2px);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    /* Fix for dropdown toggle split */
+    
+    /* Ensure proper flex behavior for all buttons */
+    .trip-view-buttons .btn-group {
+        display: flex;
+        height: 100%;
+        width: 100%;
+    }
+    
+    /* Ensure dropdown button has same height as other buttons */
+    .trip-view-buttons .dropdown-toggle-split {
+        height: calc(1.5em + 0.75rem + 2px) !important;
+        min-height: calc(1.5em + 0.75rem + 2px) !important;
+    }
+    
+    /* Ensure Add Expense button text stays on one line */
+    .trip-view-buttons .btn-primary span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        max-width: 100%;
+        text-align: center;
+    }
+    
+    /* Ensure all button text is properly aligned */
+    .trip-view-buttons .btn span {
+        text-align: center;
+        display: inline-block;
+    }
+    
+    /* Ensure icons are always visible and properly aligned */
+    .trip-view-buttons .btn i {
+        min-width: 16px;
+        display: inline-block;
+        margin-right: 0.5rem;
+        text-align: center;
+    }
+    
+    /* Mobile-specific adjustments for equal button sizing */
+    @media (max-width: 767px) {
+        .trip-view-buttons .btn-group {
+            display: flex !important;
+            flex: 1;
+        }
+        
+        /* Make dropdown button smaller width but same height */
+        .trip-view-buttons .dropdown-toggle-split {
+            flex: 0 0 12% !important;
+            padding-left: 0.25rem;
+            padding-right: 0.25rem;
+            height: calc(1.5em + 0.75rem + 2px) !important;
+            min-height: calc(1.5em + 0.75rem + 2px) !important;
+        }
+        
+        /* Ensure other buttons take up remaining space equally */
+        .trip-view-buttons > :not(.dropdown-toggle-split) {
+            flex: 1;
+        }
+        
+        /* Ensure all buttons have consistent height on mobile */
+        .trip-view-buttons .btn,
+        .trip-view-buttons form button {
+            height: calc(1.5em + 0.75rem + 2px) !important;
+            min-height: calc(1.5em + 0.75rem + 2px) !important;
+            font-size: 0.875rem; /* Smaller font size for better fit */
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+        
+        /* Ensure form container has proper height */
+        .trip-view-buttons form {
+            height: calc(1.5em + 0.75rem + 2px) !important;
+            min-height: calc(1.5em + 0.75rem + 2px) !important;
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Landscape mode form adjustments */
+        @media (max-width: 812px) and (orientation: landscape) {
+            .trip-view-buttons form {
+                flex: 1 1 auto;
+                min-width: 0;
+            }
+        }
+    }
+    
+    /* Specific adjustments for mobile landscape mode (including 768px width) */
+    @media (min-width: 576px) and (max-width: 768px) and (orientation: landscape) {
+        .trip-view-buttons .btn {
+            font-size: 0.8rem;
+            padding-left: 0.4rem;
+            padding-right: 0.4rem;
+        }
+        
+        .trip-view-buttons .btn span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+        
+        .trip-view-buttons .btn-primary span {
+            font-size: 0.75rem; /* Even smaller font for Add Expense button */
+        }
+        
+        /* Ensure dropdown button has proper width in landscape */
+        .trip-view-buttons .dropdown-toggle-split {
+            flex: 0 0 12% !important;
+            padding-left: 0.2rem;
+            padding-right: 0.2rem;
+        }
+        
+        /* Ensure other buttons take up remaining space equally */
+        .trip-view-buttons > :not(.dropdown-toggle-split) {
+            flex: 1;
+        }
+        
+        /* Ensure button group doesn't wrap */
+        .trip-view-buttons.d-flex {
+            flex-wrap: nowrap !important;
+        }
+        
+        /* First button (Expenses) should have rounded left corners */
+        .trip-view-buttons .btn:nth-child(1) {
+            border-top-left-radius: 0.5rem;
+            border-bottom-left-radius: 0.5rem;
+        }
+        
+        /* Third button (Sync) should have rounded right corners */
+        .trip-view-buttons .btn:nth-child(3) {
+            border-top-right-radius: 0.5rem;
+            border-bottom-right-radius: 0.5rem;
+        }
+        
+        /* Ensure text is always visible */
+        .trip-view-buttons .btn span.d-none.d-md-inline {
+            display: inline-block !important;
+        }
+    }
+    
+    /* Specific adjustments for small screen landscape mode (like iPhone) */
+    @media (max-width: 812px) and (orientation: landscape) {
+        .trip-view-buttons .btn {
+            font-size: 0.8rem;
+            padding-left: 0.4rem;
+            padding-right: 0.4rem;
+            min-width: 0;
+            flex: 1 1 auto;
+        }
+        
+        .trip-view-buttons .btn i {
+            margin-right: 0.3rem;
+            font-size: 0.9rem;
+        }
+        
+        /* Make dropdown slightly smaller */
+        .trip-view-buttons .dropdown-toggle-split {
+            flex: 0 0 12% !important;
+            padding-left: 0.25rem;
+            padding-right: 0.25rem;
+        }
+        
+        /* Ensure text doesn't wrap */
+        .trip-view-buttons .btn span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: inline-block;
+            max-width: 100%;
+        }
+        
+        /* Ensure button group doesn't wrap */
+        .trip-view-buttons.d-flex {
+            flex-wrap: nowrap !important;
+        }
+        
+        /* Ensure form takes up proper space */
+        .trip-view-buttons form {
+            flex: 1 1 auto;
+            min-width: 0;
+            display: flex;
+        }
+        
+        /* Ensure form button fills container */
+        .trip-view-buttons form button {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        /* First button (Expenses) should have rounded left corners */
+        .trip-view-buttons .btn:nth-child(1) {
+            border-top-left-radius: 0.5rem;
+            border-bottom-left-radius: 0.5rem;
+        }
+        
+        /* Third button (Sync) should have rounded right corners */
+        .trip-view-buttons .btn:nth-child(3) {
+            border-top-right-radius: 0.5rem;
+            border-bottom-right-radius: 0.5rem;
+        }
+        
+        /* Ensure text is always visible */
+        .trip-view-buttons .btn span.d-none.d-sm-inline {
+            display: inline-block !important;
+        }
+    }
+    
+    /* Ensure consistent button styling across all screen sizes */
+    .trip-view-buttons .btn:not(:nth-child(1)):not(:nth-child(3)):not(.dropdown-toggle-split) {
+        border-radius: 0;
+    }
+    
+    .trip-view-buttons .btn {
+        height: calc(1.5em + 0.75rem + 2px);
+        min-height: calc(1.5em + 0.75rem + 2px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+    }
+    
+    /* Specific fix for 768px width */
+    @media (width: 768px) {
+        .trip-view-buttons .btn {
+            font-size: 0.85rem;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+        
+        .trip-view-buttons .btn i {
+            margin-right: 0.3rem;
+        }
+        
+        /* Ensure text is visible at 768px */
+        .trip-view-buttons .btn span.d-none.d-md-inline {
+            display: inline-block !important;
+        }
+        
+        .trip-view-buttons .btn span.d-none.d-sm-inline {
+            display: inline-block !important;
+        }
+    }
+    
+    /* General rule for all screen widths to ensure button consistency */
+    @media screen and (min-width: 769px) {
+        .trip-view-buttons .btn {
+            font-size: 0.875rem;
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+        }
+        
+        .trip-view-buttons .btn i {
+            margin-right: 0.5rem;
+        }
+        
+        /* Ensure text visibility on larger screens */
+        .trip-view-buttons .btn span.d-none.d-md-inline {
+            display: inline-block !important;
+        }
+        
+        .trip-view-buttons .btn span.d-none.d-sm-inline {
+            display: inline-block !important;
+        }
+    }
+    
+    /* First button (Expenses) should have rounded left corners - universal rule */
+    .trip-view-buttons .btn:nth-child(1) {
+        border-top-left-radius: 0.5rem !important;
+        border-bottom-left-radius: 0.5rem !important;
+    }
+    
+    /* Third button (Sync) should have rounded right corners - universal rule */
+    .trip-view-buttons .btn:nth-child(3) {
+        border-top-right-radius: 0.5rem !important;
+        border-bottom-right-radius: 0.5rem !important;
+    }
+    
+    /* Ensure corner styling at 768px width */
+    @media (width: 768px) {
+        .trip-view-buttons .btn:nth-child(1) {
+            border-top-left-radius: 0.5rem;
+            border-bottom-left-radius: 0.5rem;
+        }
+        
+        .trip-view-buttons .btn:nth-child(3) {
+            border-top-right-radius: 0.5rem;
+            border-bottom-right-radius: 0.5rem;
+        }
+        
+        /* Add rounded corners to dropdown button */
+        .trip-view-buttons .btn:nth-last-child(1) {
+            border-top-right-radius: 0.5rem;
+            border-bottom-right-radius: 0.5rem;
+        }
+        
+        /* More specific targeting for dropdown button */
+        .trip-view-buttons .btn.dropdown-toggle-split {
+            border-top-right-radius: 0.5rem !important;
+            border-bottom-right-radius: 0.5rem !important;
+        }
+    }
+    
+    /* Ensure corner styling on larger screens */
+    @media screen and (min-width: 769px) {
+        .trip-view-buttons .btn:nth-child(1) {
+            border-top-left-radius: 0.5rem !important;
+            border-bottom-left-radius: 0.5rem !important;
+        }
+        
+        .trip-view-buttons .btn:nth-child(3) {
+            border-top-right-radius: 0.5rem !important;
+            border-bottom-right-radius: 0.5rem !important;
+        }
+        
+        /* Add rounded corners to dropdown button */
+        .trip-view-buttons .btn:nth-last-child(1) {
+            border-top-right-radius: 0.5rem !important;
+            border-bottom-right-radius: 0.5rem !important;
+        }
+        
+        /* More specific targeting for dropdown button */
+        .trip-view-buttons .btn.dropdown-toggle-split {
+            border-top-right-radius: 0.5rem !important;
+            border-bottom-right-radius: 0.5rem !important;
+        }
+    }
+    
+    /* Universal corner styling to ensure it works on all screen sizes */
+    .trip-view-buttons .btn:nth-child(1) {
+        border-top-left-radius: 0.5rem !important;
+        border-bottom-left-radius: 0.5rem !important;
+    }
+    
+    .trip-view-buttons .btn:nth-child(3) {
+        border-top-right-radius: 0.5rem !important;
+        border-bottom-right-radius: 0.5rem !important;
+    }
+    
+    /* Add rounded corners to dropdown button as well */
+    .trip-view-buttons .btn:nth-last-child(1) {
+        border-top-right-radius: 0.5rem !important;
+        border-bottom-right-radius: 0.5rem !important;
+    }
+    
+    /* More specific targeting for dropdown button */
+    .trip-view-buttons .btn.dropdown-toggle-split {
+        border-top-right-radius: 0.5rem !important;
+        border-bottom-right-radius: 0.5rem !important;
+    }
+    
+    /* iPhone specific adjustments */
+    @media (max-width: 414px) {
+        .trip-view-buttons .btn span {
+            font-size: 0.75rem;
+        }
+        
+        .trip-view-buttons .btn i {
+            margin-right: 0.25rem !important;
+        }
+    }
+
+    /* Attempt to disable text truncation on action buttons */
+    @media (max-width: 767px) {
+        #expenses .btn-group-sm .btn {
+            overflow: visible !important;
+            text-overflow: clip !important;
+        }
+    }
+</style>
+{% endblock %} {% block content %}
+<div class="row mb-4">
+    <div class="col-xl-7">
+        <h1 class="mb-2">{{ trip.name }}</h1>
+        <p class="text-muted">
+            <i class="fas fa-calendar me-1"></i>
+            {{ trip.start_date.strftime('%d %b %Y') }} - {{
+            trip.end_date.strftime('%d %b %Y') }}
+        </p>
+        {% if trip.description %}
+        <p>{{ trip.description }}</p>
+        {% endif %}
+    </div>
+    <div class="col-xl-5 text-xl-end">
+        <div class="btn-group w-100 trip-view-buttons d-flex flex-nowrap" role="group">
+            <a
+                href="{{ url_for('expenses.list_expenses', trip_id=trip.id) }}"
+                class="btn btn-outline-primary flex-fill"
+            >
+                <i class="fas fa-list me-2"></i>
+                <span class="d-none d-sm-inline">Expenses</span>
+            </a>
+        <a href="{{ url_for('expenses.add_expense', trip_id=trip.id) }}" class="btn btn-primary flex-fill">
+            <i class="fas fa-plus me-2"></i>
+            <span class="d-none d-sm-inline">New Expense</span>
+        </a>
+            {% if trip.admin_id == current_user.id %}
+            <button
+                type="button"
+                class="btn btn-warning flex-fill"
+                title="Recalculate all balances"
+                data-bs-toggle="modal" 
+                data-bs-target="#syncModal"
+            >
+                <i class="fas fa-sync-alt me-2"></i>
+                <span class="d-none d-sm-inline">Sync</span>
+            </button>
+            {% endif %}
+            <button
+                type="button"
+                class="btn btn-primary dropdown-toggle dropdown-toggle-split flex-fill"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                {% if trip.admin_id == current_user.id %}
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{{ url_for('trips.edit_trip', trip_id=trip.id) }}"
+                    >
+                        <i class="fas fa-edit me-2"></i>Edit Trip
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{{ url_for('trips.manage_participants', trip_id=trip.id) }}"
+                    >
+                        <i class="fas fa-users me-2"></i>Manage Participants
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{{ url_for('trips.manage_advances', trip_id=trip.id) }}"
+                    >
+                        <i class="fas fa-money-bill-wave me-2"></i>Manage
+                        Advances
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{{ url_for('trips.manage_payments', trip_id=trip.id) }}"
+                    >
+                        <i class="fas fa-hand-holding-usd me-2"></i>Manage
+                        General Payments
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                    <a
+                        class="dropdown-item text-danger"
+                        href="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#deleteModal"
+                    >
+                        <i class="fas fa-trash me-2"></i>Delete Trip
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Sync Trip Modal -->
+<div class="modal fade" id="syncModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sync Trip Balances</h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Are you sure you want to recalculate all balances for this trip? This will update all participant balances based on current expenses.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+                    Cancel
+                </button>
+                <form
+                    action="{{ url_for('trips.sync_trip_balances', trip_id=trip.id) }}"
+                    method="POST"
+                >
+                    <button type="submit" class="btn btn-warning">
+                        Sync Balances
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Trip Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="panel h-100">
+            <div class="panel-body text-center">
+                <h5 class="card-title">Total Expenses</h5>
+                <h3 class="fw-bold">₹{{ total_expenses|round(2) }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="panel h-100">
+            <div class="panel-body text-center">
+                <h5 class="card-title">Your Balance</h5>
+                {% set user_balance =
+                trip.calculate_user_balance(current_user.id) %} {% if
+                user_balance > 0 %}
+                <h3 class="text-success">₹{{ user_balance|round(2) }}</h3>
+                <p class="mb-0">You are owed money</p>
+                {% elif user_balance < 0 %}
+                <h3 class="text-danger">₹{{ (user_balance * -1)|round(2) }}</h3>
+                <p class="mb-0">You owe money</p>
+                {% else %}
+                <h3>₹0.00</h3>
+                <p class="mb-0">You're all settled up!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="panel h-100">
+            <div class="panel-body text-center">
+                <h5 class="card-title">Participants</h5>
+                <h3>{{ participants|length }}</h3>
+                <div class="mt-2">
+                    {% for participant in participants %}
+                    <span
+                        class="badge {% if participant.type == 'registered' %}bg-primary{% else %}bg-info{% endif %} me-1 mb-1"
+                    >
+                        {{ participant.name }} {% if participant.type ==
+                        'unregistered' %}
+                        <small>(unregistered)</small>
+                        {% endif %}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Expense Contributors Section -->
+    <div class="col-md-12 mb-3">
+        <div class="panel h-100">
+            <div class="panel-body">
+                <h5 class="card-title">Expense Contributors</h5>
+                <p class="text-muted">
+                    Participants who have contributed to expenses in this trip
+                </p>
+                <div>
+                    {% for contributor_id in expense_contributors %}
+                    <span class="badge bg-success me-1 mb-1">
+                        {% if contributor_id.startswith('unregistered_') %} {{
+                        contributor_id.replace('unregistered_', '')|title }}
+                        <small>(unregistered)</small>
+                        {% else %} {% if contributor_id ==
+                        current_user.id|string %} You {% else %} {{
+                        user_map.get(contributor_id, 'Unknown') }} {% endif %}
+                        {% endif %}
+                    </span>
+                    {% else %}
+                    <p class="text-muted">No expense contributors yet</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabs for Expenses and Settlements -->
+<ul class="nav nav-tabs mb-4" id="tripTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button
+            class="nav-link active"
+            id="expenses-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#expenses"
+            type="button"
+            role="tab"
+        >
+            <i class="fas fa-receipt me-2"></i>Expenses
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button
+            class="nav-link"
+            id="settlements-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#settlements"
+            type="button"
+            role="tab"
+        >
+            <i class="fas fa-exchange-alt me-2"></i>Settlements
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="tripTabsContent">
+    <!-- Expenses Tab -->
+    <div class="tab-pane fade show active" id="expenses" role="tabpanel">
+        {% if expenses %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Paid By</th>
+                        <th>Split Method</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expense in expenses %}
+                    <tr>
+                        <td>{{ expense.date.strftime('%d %b %Y') }}</td>
+                        <td>{{ expense.description }}</td>
+                        <td>₹{{ expense.amount|round(2) }}</td>
+                        <td>
+                            {% if expense.payer_id == current_user.id %}
+                            <span class="badge bg-primary">You</span>
+                            {% else %} {% set payer_id_str =
+                            expense.payer_id|string %} {% if payer_id_str ==
+                            'group_everyone' %}
+                            <span class="badge bg-warning"
+                                >Everyone (Group Payment)</span
+                            >
+                            {% elif payer_id_str.startswith('unregistered_') %}
+                            <span class="badge bg-info"
+                                >{{ user_map.get(payer_id_str,
+                                payer_id_str.replace('unregistered_', ''))
+                                }}</span
+                            >
+                            <small class="d-block text-muted mt-1"
+                                >Unregistered</small
+                            >
+                            {% else %}
+                            <span class="badge bg-success"
+                                >{{ user_map.get(payer_id_str, 'Unknown')
+                                }}</span
+                            >
+                            {% endif %} {% endif %}
+                        </td>
+                        <td>
+                            {% if expense.split_method == 'equal' %}
+                            <span class="badge bg-info">Equal</span>
+                            {% elif expense.split_method == 'exact' %}
+                            <span class="badge bg-warning">Exact</span>
+                            {% elif expense.split_method == 'itemized' %}
+                            <span class="badge bg-success">Itemized</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a
+                                    href="{{ url_for('expenses.view_expense', trip_id=trip.id, expense_id=expense.id) }}"
+                                    class="btn btn-outline-primary"
+                                >
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                {% if expense.payer_id == current_user.id or
+                                trip.admin_id == current_user.id %}
+                                <a
+                                    href="{{ url_for('expenses.edit_expense', trip_id=trip.id, expense_id=expense.id) }}"
+                                    class="btn btn-outline-primary"
+                                >
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center p-5 bg-light rounded">
+            <h3 class="mb-3">No expenses yet</h3>
+            <p class="mb-4">Start by adding your first expense to this trip.</p>
+            <a
+                href="{{ url_for('expenses.add_expense', trip_id=trip.id) }}"
+                class="btn btn-primary"
+                onmouseover="if(document.body.classList.contains('black-theme-active')) { this.style.backgroundColor='#BDBDBD'; this.style.color='#000000'; }"
+                onmouseout="if(document.body.classList.contains('black-theme-active')) { this.style.backgroundColor='#FFFFFF'; this.style.color='#000000'; }"
+            >
+                <i class="fas fa-plus me-2"></i>
+                <span class="d-none d-md-inline">Add Expense</span>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Settlements Tab -->
+    <div class="tab-pane fade" id="settlements" role="tabpanel">
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h5 class="mb-0">Settlement Summary</h5>
+                    </div>
+                    <div class="panel-body">
+                        {% if settlements %}
+                        <div class="list-group">
+                            {% for settlement in settlements %}
+                            <div class="list-group-item">
+                                <div
+                                    class="d-flex justify-content-between align-items-center"
+                                >
+                                    <div>
+                                        <strong>
+                                            {% if
+                                            settlement.from_user.startswith('unregistered_')
+                                            %} {{
+                                            user_map.get(settlement.from_user,
+                                            settlement.from_user.replace('unregistered_',
+                                            '')) }}
+                                            <span class="badge bg-info"
+                                                >unregistered</span
+                                            >
+                                            {% else %} {{
+                                            user_map.get(settlement.from_user,
+                                            'Unknown') }} {% endif %}
+                                        </strong>
+                                        <i class="fas fa-arrow-right mx-2"></i>
+                                        <strong>
+                                            {% if
+                                            settlement.to_user.startswith('unregistered_')
+                                            %} {{
+                                            user_map.get(settlement.to_user,
+                                            settlement.to_user.replace('unregistered_',
+                                            '')) }}
+                                            <span class="badge bg-info"
+                                                >unregistered</span
+                                            >
+                                            {% else %} {{
+                                            user_map.get(settlement.to_user,
+                                            'Unknown') }} {% endif %}
+                                        </strong>
+                                    </div>
+                                    <span class="badge bg-primary"
+                                        >₹{{ settlement.amount|round(2) }}</span
+                                    >
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p class="text-center">
+                            No settlements needed. Everyone is settled up!
+                        </p>
+                        {% endif %}
+                    </div>
+                    <div class="panel-footer text-end">
+                        <a
+                            href="{{ url_for('trips.view_settlements', trip_id=trip.id) }}"
+                            class="btn btn-sm btn-outline-primary"
+                        >
+                            <i class="fas fa-file-invoice me-2"></i>Detailed
+                            Report
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h5 class="mb-0">Individual Balances</h5>
+                    </div>
+                    <div class="panel-body p-0">
+                        <div class="list-group list-group-flush">
+                            <!-- Registered participants -->
+                            {% for participant in participants %} {% if
+                            participant.type == 'registered' %} {% set balance =
+                            trip.calculate_user_balance(participant.id) %}
+                            <div class="list-group-item">
+                                <div
+                                    class="d-flex justify-content-between align-items-center"
+                                >
+                                    <span>
+                                        {{ participant.name }} {% if
+                                        participant.id == current_user.id|string
+                                        %}
+                                        <strong>(You)</strong>
+                                        {% endif %}
+                                    </span>
+                                    {% if balance > 0 %}
+                                    <span class="text-success"
+                                        >+₹{{ balance|round(2) }}</span
+                                    >
+                                    {% elif balance < 0 %}
+                                    <span class="text-danger"
+                                        >-₹{{ (balance * -1)|round(2) }}</span
+                                    >
+                                    {% else %}
+                                    <span>₹0.00</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %} {% endfor %}
+
+                            <!-- Unregistered participants -->
+                            {% for participant in participants %} {% if
+                            participant.type == 'unregistered' %} {% set
+                            unregistered_id = 'unregistered_' + participant.name
+                            %} {% set balance =
+                            trip.calculate_unregistered_balance(unregistered_id)
+                            %}
+                            <div class="list-group-item">
+                                <div
+                                    class="d-flex justify-content-between align-items-center"
+                                >
+                                    <span>
+                                        {{ participant.name }}
+                                        <span class="badge bg-info"
+                                            >unregistered</span
+                                        >
+                                    </span>
+                                    {% if balance > 0 %}
+                                    <span class="text-success"
+                                        >+₹{{ balance|round(2) }}</span
+                                    >
+                                    {% elif balance < 0 %}
+                                    <span class="text-danger"
+                                        >-₹{{ (balance * -1)|round(2) }}</span
+                                    >
+                                    {% else %}
+                                    <span>₹0.00</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %} {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Trip Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Trip</h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Are you sure you want to delete this trip? This action
+                    cannot be undone and will delete all expenses associated
+                    with this trip.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+                    Cancel
+                </button>
+                <form
+                    action="{{ url_for('trips.delete_trip', trip_id=trip.id) }}"
+                    method="POST"
+                >
+                    <button type="submit" class="btn btn-danger">
+                        Delete Trip
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

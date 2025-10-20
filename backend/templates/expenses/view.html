@@ -1,0 +1,721 @@
+{% extends "base.html" %} {% block title %}{{ expense.description }} - Trip
+Expense Tracker{% endblock %} {% block styles %}
+<style>
+    :root {
+        --body-bg: #f4f1ea;
+        --panel-bg: #ffffff;
+        --border-color: #000000;
+        --theme-accent-color: #aec6cf; /* Default: Pastel Blue */
+        --theme-contrast-color: #000000; /* Default for light accent */
+        --secondary-action-color: #85a0aa; /* Default: Darkened Pastel Blue */
+        --border-width: 2px;
+        --shadow-offset: 5px;
+        --breadcrumb-bg: #e9ecef;
+        --breadcrumb-hover-bg: #d1d1d1;
+        --breadcrumb-inactive-bg: #dde0e3;
+        --breadcrumb-active-color: #495057;
+        --breadcrumb-font-size: 0.95rem;
+        --breadcrumb-padding: 0.25rem 0.5rem;
+    }
+
+    body {
+        background-color: var(--body-bg);
+        font-family:
+            -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+            Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+            "Segoe UI Symbol";
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .fw-bold {
+        font-weight: 700 !important;
+        color: var(--border-color);
+    }
+
+    .btn {
+        border: var(--border-width) solid var(--border-color);
+        box-shadow: 3px 3px 0px var(--border-color);
+        border-radius: 0.5rem;
+        font-weight: 700;
+        transition: all 0.15s ease-out;
+        padding: 0.5rem 1rem;
+    }
+
+    .btn:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 5px 5px 0px var(--border-color);
+    }
+
+    .btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0px var(--border-color);
+    }
+
+    .btn-primary {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-primary:hover,
+    .btn-primary:focus,
+    .btn-primary:active,
+    a.btn-primary:hover,
+    a.btn-primary:focus,
+    a.btn-primary:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-check:focus + .btn-primary,
+    .btn-primary:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    /* Added styles for outline buttons to maintain theme colors */
+    .btn-outline-primary {
+        color: var(--theme-accent-color) !important;
+        border-color: var(--theme-accent-color) !important;
+        background-color: transparent !important;
+    }
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus,
+    .btn-outline-primary:active,
+    a.btn-outline-primary:hover,
+    a.btn-outline-primary:focus,
+    a.btn-outline-primary:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-check:focus + .btn-outline-primary,
+    .btn-outline-primary:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    .btn-secondary {
+        background-color: var(--secondary-action-color);
+        color: var(--theme-contrast-color);
+        border-color: var(--border-color);
+    }
+    .btn-secondary:hover {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel {
+        background-color: var(--panel-bg);
+        border: var(--border-width) solid var(--border-color);
+        border-radius: 1rem;
+        box-shadow: var(--shadow-offset) var(--shadow-offset) 0px
+            var(--border-color);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* Ensures children conform to rounded corners */
+    }
+
+    .panel-header {
+        padding: 0.75rem 1.25rem;
+        border-bottom: var(--border-width) solid var(--border-color);
+        background-color: var(--theme-accent-color);
+    }
+    .panel-header h5,
+    .panel-header h4 {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel-body {
+        padding: 1rem;
+        flex-grow: 1;
+    }
+
+    .expense-amount-display {
+        color: var(--border-color) !important;
+    }
+
+    /* Breadcrumb styling with background and hover effects */
+    .breadcrumb {
+        background-color: var(--breadcrumb-bg);
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        font-size: var(--breadcrumb-font-size);
+        display: flex;
+        align-items: center;
+        list-style: none;
+    }
+
+    .breadcrumb-item {
+        display: inline-flex;
+        align-items: center;
+        position: relative;
+        font-size: var(--breadcrumb-font-size);
+        line-height: 1.5;
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: ">";
+        color: var(--breadcrumb-active-color);
+        padding: 0 0.5rem;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .breadcrumb-item a {
+        color: var(--theme-accent-color);
+        text-decoration: none;
+        padding: var(--breadcrumb-padding);
+        border-radius: 0.25rem;
+        transition: all 0.2s ease-in-out;
+        background-color: var(--breadcrumb-inactive-bg);
+        font-size: var(--breadcrumb-font-size);
+        display: inline-flex;
+        align-items: center;
+        line-height: 1.5;
+        font-weight: 500; /* Light bold for all items except active */
+    }
+
+    .breadcrumb-item a:hover {
+        background-color: var(--breadcrumb-hover-bg);
+        color: var(--breadcrumb-active-color);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .breadcrumb-item.active {
+        color: var(--breadcrumb-active-color);
+        font-weight: 600; /* Regular bold for active item */
+        padding: var(--breadcrumb-padding);
+        font-size: var(--breadcrumb-font-size);
+        display: inline-flex;
+        align-items: center;
+        line-height: 1.5;
+    }
+
+    /* Fix for table responsiveness on mobile */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0;
+        padding: 0;
+    }
+
+    .split-details-table {
+        width: 100%;
+        margin-bottom: 1rem;
+        table-layout: fixed;
+        border-collapse: collapse;
+    }
+
+    .split-details-table th:first-child,
+    .split-details-table td:first-child {
+        width: 70%;
+        text-align: left;
+    }
+
+    .split-details-table th:last-child,
+    .split-details-table td:last-child {
+        width: 30%;
+        text-align: right;
+    }
+
+    @media (max-width: 767px) {
+        .btn-group-proportional {
+            display: flex;
+            width: 100%;
+        }
+        .btn-group-proportional > .btn:not(.dropdown-toggle-split) {
+            flex-grow: 3;
+            /* Ensure text and icon are centered */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-group-proportional > .dropdown-toggle-split {
+            flex-grow: 1;
+        }
+
+        /* Fix for split details table on mobile */
+        .split-details-table {
+            table-layout: fixed;
+            width: 100% !important; /* Ensure table is full width */
+        }
+        .split-details-table th:first-child,
+        .split-details-table td:first-child {
+            width: 70%;
+        }
+        .split-details-table th:last-child,
+        .split-details-table td:last-child {
+            width: 35%;
+        }
+        
+        .table-responsive {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-y: hidden;
+            -ms-overflow-style: -ms-autohiding-scrollbar;
+            border: none;
+        }
+        
+        /* Fix for right gap issue - remove panel padding for table */
+        .panel-body > .table-responsive {
+            margin: 0 -1rem;
+        }
+        
+        .panel-body > .table-responsive > .split-details-table {
+            margin-bottom: 0;
+        }
+        
+        /* Adjust breadcrumb for mobile */
+        .breadcrumb {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        .breadcrumb-item,
+        .breadcrumb-item a,
+        .breadcrumb-item.active {
+            font-size: 0.9rem;
+        }
+    }
+    
+    /* Additional fix for right gap issue on small screens */
+    @media (max-width: 575px) {
+        .panel-body {
+            padding: 1rem 0.75rem;
+        }
+        
+        .panel-body > .table-responsive {
+            margin: 0 -0.75rem;
+        }
+        
+        .breadcrumb {
+            padding: 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .breadcrumb-item a,
+        .breadcrumb-item.active {
+            padding: 0.25rem;
+            font-size: 0.85rem;
+        }
+    }
+</style>
+{% endblock %} {% block content %}
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('trips.view_trip', trip_id=trip.id) }}"
+                        >{{ trip.name }}</a
+                    >
+                </li>
+                <li class="breadcrumb-item">
+                    <a
+                        href="{{ url_for('expenses.list_expenses', trip_id=trip.id) }}"
+                        >Expenses</a
+                    >
+                </li>
+                <li class="breadcrumb-item active">
+                    {{ expense.description }}
+                </li>
+            </ol>
+        </nav>
+        <h1 class="mb-2">{{ expense.description }}</h1>
+    </div>
+</div>
+<div class="row mb-4 align-items-center">
+    <div class="col-4 col-md-8">
+        <p class="text-muted mb-0">
+            <i class="fas fa-calendar me-1"></i>
+            {{ expense.date.strftime('%d %b %Y') }}
+        </p>
+    </div>
+    <div class="col-8 col-md-4 text-end">
+        <div class="btn-group btn-group-proportional">
+            {% if expense.payer_id == current_user.id or trip.admin_id ==
+            current_user.id %}
+            <a
+                href="{{ url_for('expenses.edit_expense', trip_id=trip.id, expense_id=expense.id) }}"
+                class="btn btn-primary"
+            >
+                <i class="fas fa-edit me-2"></i>Edit Expense
+            </a>
+            <button
+                type="button"
+                class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown"
+            >
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <a
+                        class="dropdown-item text-danger"
+                        href="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#deleteModal"
+                    >
+                        <i class="fas fa-trash me-2"></i>Delete Expense
+                    </a>
+                </li>
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="panel mb-4">
+            <div class="panel-header">
+                <h5 class="mb-0">Expense Details</h5>
+            </div>
+            <div class="panel-body">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <strong>Amount:</strong>
+                    </div>
+                    <div class="col-md-8">
+                        <h4 class="text-primary expense-amount-display">
+                            ₹{{ expense.amount|round(2) }}
+                        </h4>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <strong>Paid By:</strong>
+                    </div>
+                    <div class="col-md-8">
+                        {% if payer_info.type == 'group' %}
+                        <span class="badge bg-warning"
+                            >{{ payer_info.name }}</span
+                        >
+                        {% elif payer_info.id|string == current_user.id|string
+                        %}
+                        <span class="badge bg-primary">You</span>
+                        {% elif payer_info.type == 'unregistered' %}
+                        <span class="badge bg-info"
+                            >{{ payer_info.name }} (Unregistered)</span
+                        >
+                        {% else %}
+                        <span class="badge bg-success"
+                            >{{ payer_info.name }}</span
+                        >
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <strong>Split Method:</strong>
+                    </div>
+                    <div class="col-md-8">
+                        {% if expense.split_method == 'equal' %}
+                        <span class="badge bg-info">Equal Split</span>
+                        {% elif expense.split_method == 'exact' %}
+                        <span class="badge bg-warning">Exact Amounts</span>
+                        {% elif expense.split_method == 'itemized' %}
+                        <span class="badge bg-success">Itemized</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <strong>Category:</strong>
+                    </div>
+                    <div class="col-md-8">
+                        {% if expense.category %}
+                        <span class="badge bg-secondary"
+                            >{{ expense.category }}</span
+                        >
+                        {% else %}
+                        <span class="text-muted">Not specified</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if expense.notes %}
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <strong>Notes:</strong>
+                    </div>
+                    <div class="col-md-8">{{ expense.notes }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Split Details panel -->
+        <div class="panel mb-4">
+            <div class="panel-header">
+                <h5 class="mb-0">Split Details</h5>
+            </div>
+            <div class="panel-body">
+                {% if expense.split_method == 'equal' %}
+                <!-- Equal Split -->
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    {% if participants|length > 0 %} This expense was split
+                    equally among {{ participants|length }} participants. Each
+                    person's share is ₹{{ (expense.amount /
+                    participants|length)|round(2) }}. {% else %} This expense
+                    has no participants assigned. Please edit the expense to add
+                    participants. {% endif %}
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered split-details-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Participant</th>
+                                <th class="text-end">Share</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if participants|length > 0 %} {% for participant
+                            in participants %}
+                            <tr>
+                                <td>
+                                    {% if participant.type == 'registered' and
+                                    participant.id == current_user.id|string %}
+                                    <strong>You</strong>
+                                    {% else %} {{ participant.name }} {% if
+                                    participant.type == 'unregistered' %}
+                                    <span class="badge bg-info"
+                                        >unregistered</span
+                                    >
+                                    {% endif %} {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    ₹{{ (expense.amount /
+                                    participants|length)|round(2) }}
+                                </td>
+                            </tr>
+                            {% endfor %} {% else %}
+                            <tr>
+                                <td colspan="2" class="text-center">
+                                    No participants assigned to this expense
+                                </td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {% elif expense.split_method == 'exact' %}
+                <!-- Exact Split -->
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    This expense was split with exact amounts specified for each
+                    participant.
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered split-details-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Participant</th>
+                                <th class="text-end">Share</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for share in shares %}
+                            <tr>
+                                <td>
+                                    {% if share.type == 'registered' and
+                                    share.user_id == current_user.id|string %}
+                                    <strong>You</strong>
+                                    {% else %} {{ share.name }} {% if share.type
+                                    == 'unregistered' %}
+                                    <span class="badge bg-info"
+                                        >unregistered</span
+                                    >
+                                    {% endif %} {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    ₹{{ share.amount|round(2) }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {% elif expense.split_method == 'itemized' %}
+                <!-- Itemized Split -->
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i>
+                    This expense was split by items consumed by each
+                    participant.
+                </div>
+                {% if items %} {% for item in items %}
+                <div class="panel mb-3">
+                    <div class="panel-header">
+                        <div
+                            class="d-flex justify-content-between align-items-center"
+                        >
+                            <h6 class="mb-0">
+                                {{ item.name|default('Unnamed Item') }}
+                            </h6>
+                            <span class="badge bg-primary"
+                                >₹{{ item.price|default(0)|round(2) }}</span
+                            >
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <p><strong>Consumed by:</strong></p>
+                        <div>
+                            {% if item.participants %} {% for user_id in
+                            item.participants %}
+                            <span class="badge bg-secondary me-1 mb-1">
+                                {% if user_id|int == current_user.id %} You {%
+                                else %} {{ user_map.get(user_id|string,
+                                'Unknown') }} {% endif %}
+                            </span>
+                            {% endfor %} {% endif %} {% if item.unregistered %}
+                            {% for name in item.unregistered %}
+                            <span class="badge bg-info me-1 mb-1">
+                                {{ name }} (Unregistered)
+                            </span>
+                            {% endfor %} {% endif %}
+                        </div>
+                        {% if item.price is defined and item.price and
+                        item.participants|default([])|length|gt(0) %}
+                        <p class="mt-2 mb-0">
+                            <small class="text-muted">
+                                Each person's share: ₹{{ (item.price /
+                                (item.participants|default([])|length +
+                                item.unregistered|default([])|length))|round(2)
+                                }}
+                            </small>
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %} {% else %}
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    No item details found for this itemized expense.
+                </div>
+                {% endif %} {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Participants panel -->
+        <div class="panel mb-4">
+            <div class="panel-header">
+                <h5 class="mb-0">Participants</h5>
+            </div>
+            <div class="panel-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for participant in participants %}
+                    <li
+                        class="list-group-item d-flex justify-content-between align-items-center"
+                    >
+                        <div>
+                            {% if participant.type == 'registered' and
+                            participant.id == current_user.id|string %}
+                            <strong>You</strong>
+                            {% else %} {{ participant.name }} {% if
+                            participant.type == 'unregistered' %}
+                            <span class="badge bg-info ms-1">unregistered</span>
+                            {% endif %} {% endif %}
+                        </div>
+
+                        {% if participant.type == 'registered' and
+                        participant.id == expense.payer_id|string %}
+                        <span class="badge bg-success">Paid</span>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Trip Info panel -->
+        <div class="panel">
+            <div class="panel-header">
+                <h5 class="mb-0">Trip Information</h5>
+            </div>
+            <div class="panel-body">
+                <p>
+                    <strong>Trip:</strong>
+                    <a href="{{ url_for('trips.view_trip', trip_id=trip.id) }}"
+                        >{{ trip.name }}</a
+                    >
+                </p>
+                <p>
+                    <strong>Dates:</strong> {{ trip.start_date.strftime('%d %b
+                    %Y') }} - {{ trip.end_date.strftime('%d %b %Y') }}
+                </p>
+                <p>
+                    <strong>Admin:</strong>
+                    {% if trip.admin_id == current_user.id %}
+                    <span class="badge bg-primary">You</span>
+                    {% else %} {{ user_map.get(trip.admin_id|string, 'Unknown')
+                    }} {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Expense Modal -->
+<div
+    class="modal fade"
+    id="deleteModal"
+    tabindex="-1"
+    aria-labelledby="deleteModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    Delete Expense
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this expense?</p>
+                <p class="text-danger">
+                    <strong>This action cannot be undone.</strong>
+                </p>
+                <p><strong>Expense Details:</strong></p>
+                <ul>
+                    <li>Description: {{ expense.description }}</li>
+                    <li>Amount: ₹{{ expense.amount|round(2) }}</li>
+                    <li>Date: {{ expense.date.strftime('%d %b %Y') }}</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+                    Cancel
+                </button>
+                <form
+                    action="{{ url_for('expenses.delete_expense', trip_id=trip.id, expense_id=expense.id) }}"
+                    method="POST"
+                    class="d-inline"
+                >
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i>Delete Expense
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

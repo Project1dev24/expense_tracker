@@ -1,0 +1,273 @@
+{% extends "base.html" %} {% block title %}My Trips - Trip Expense Tracker{%
+endblock %} {% block styles %}
+<style>
+    :root {
+        --body-bg: #f4f1ea;
+        --panel-bg: #ffffff;
+        --border-color: #000000;
+        --theme-accent-color: #aec6cf; /* Default: Pastel Blue */
+        --theme-contrast-color: #000000; /* Default for light accent */
+        --secondary-action-color: #85a0aa; /* Default: Darkened Pastel Blue */
+        --border-width: 2px;
+        --shadow-offset: 5px;
+    }
+
+    body {
+        background-color: var(--body-bg);
+        font-family:
+            -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+            Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+            "Segoe UI Symbol";
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .fw-bold {
+        font-weight: 700 !important;
+        color: var(--border-color);
+    }
+
+    .btn {
+        border: var(--border-width) solid var(--border-color);
+        box-shadow: 3px 3px 0px var(--border-color);
+        border-radius: 0.5rem;
+        font-weight: 700;
+        transition: all 0.15s ease-out;
+        padding: 0.5rem 1rem;
+    }
+
+    .btn:hover {
+        /* No specific hover transform/shadow */
+    }
+
+    .btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0px var(--border-color);
+    }
+
+    .btn-primary {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-primary:hover,
+    .btn-primary:focus,
+    a.btn-primary:hover,
+    a.btn-primary:focus,
+    .btn-group .btn-primary:hover,
+    .btn-group .btn-primary:focus,
+    .btn-group a.btn-primary:hover,
+    .btn-group a.btn-primary:focus {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important; /* Darker hover effect */
+        border-color: var(--border-color) !important;
+    }
+    .btn-primary:active,
+    a.btn-primary:active,
+    .btn-group .btn-primary:active,
+    .btn-group a.btn-primary:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-check:focus + .btn-primary,
+    .btn-primary:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    /* Added styles for outline buttons to maintain theme colors */
+    .btn-outline-primary {
+        color: var(--theme-accent-color) !important;
+        border-color: var(--theme-accent-color) !important;
+        background-color: transparent !important;
+    }
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus,
+    a.btn-outline-primary:hover,
+    a.btn-outline-primary:focus {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-outline-primary:active,
+    a.btn-outline-primary:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-check:focus + .btn-outline-primary,
+    .btn-outline-primary:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    .btn-warning {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-warning:hover,
+    .btn-warning:focus,
+    a.btn-warning:hover,
+    a.btn-warning:focus,
+    .btn-group .btn-warning:hover,
+    .btn-group .btn-warning:focus,
+    .btn-group a.btn-warning:hover,
+    .btn-group a.btn-warning:focus {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-warning:active,
+    a.btn-warning:active,
+    .btn-group .btn-warning:active,
+    .btn-group a.btn-warning:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-check:focus + .btn-warning,
+    .btn-warning:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    .btn-secondary {
+        background-color: var(--secondary-action-color);
+        color: var(--theme-contrast-color);
+        border-color: var(--border-color);
+    }
+    .btn-secondary:hover {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel {
+        background-color: var(--panel-bg);
+        border: var(--border-width) solid var(--border-color);
+        border-radius: 1rem;
+        box-shadow: var(--shadow-offset) var(--shadow-offset) 0px
+            var(--border-color);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* Ensures children conform to rounded corners */
+    }
+
+    .panel-header {
+        padding: 0.75rem 1.25rem;
+        border-bottom: var(--border-width) solid var(--border-color);
+        background-color: var(--theme-accent-color);
+    }
+    .panel-header h5,
+    .panel-header h4 {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel-body {
+        padding: 1rem;
+        flex-grow: 1;
+    }
+    .panel-footer {
+        padding: 1rem;
+        border-top: var(--border-width) solid var(--border-color);
+
+    }
+    .panel-header a {
+        text-decoration: none;
+        color: var(--theme-contrast-color);
+        
+        /* Removed text-shadow */
+    }
+    .panel-header a:hover {
+        color: var(--theme-contrast-color); /* Change to contrasting color on hover */
+    }
+</style>
+{% endblock %} {% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1 class="mb-3">My Trips</h1>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('trips.add_trip') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>New Trip
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        {% if trips %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for trip in trips %}
+            <div class="col">
+                <div class="panel h-100">
+                    <div class="panel-header">
+                        <h5 class="mb-0">
+                            <a
+                                href="{{ url_for('trips.view_trip', trip_id=trip.id) }}"
+                                class="text-decoration-none"
+                            >
+                                {{ trip.name }}
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="panel-body">
+                        <p>{{ trip.description|truncate(100) }}</p>
+                        <p>
+                            <small class="text-muted">
+                                <i class="fas fa-calendar me-1"></i>
+                                {{ trip.start_date.strftime('%d %b %Y') }} - {{
+                                trip.end_date.strftime('%d %b %Y') }}
+                            </small>
+                        </p>
+                        <p>
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>
+                                {{ trip.end_date|trip_time_label }}
+                            </small>
+                        </p>
+                        <p>
+                            <small class="text-muted">
+                                <i class="fas fa-users me-1"></i>
+                                {{ trip.get_participants_list()|length + 1 }}
+                                participants
+                            </small>
+                        </p>
+                    </div>
+                    <div class="panel-footer">
+                        <div
+                            class="d-flex justify-content-between align-items-center"
+                        >
+                            <div>
+                                <i class="fas fa-receipt me-2 text-muted"></i>
+                                <span class="text-muted"
+                                    >{{ trip.expenses.count() }} expenses</span
+                                >
+                            </div>
+                            <a
+                                href="{{ url_for('trips.view_trip', trip_id=trip.id) }}"
+                                class="btn btn-primary"
+                            >
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center p-5 bg-light rounded">
+            <h3 class="mb-3">No trips yet</h3>
+            <p class="mb-4">
+                Start by creating your first trip to track expenses.
+            </p>
+            <a href="{{ url_for('trips.add_trip') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Create Trip
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,469 @@
+{% extends "base.html" %} {% block title %}Manage Advances - {{ trip.name }}{%
+endblock %} {% block styles %}
+<style>
+    :root {
+        --body-bg: #f4f1ea;
+        --panel-bg: #ffffff;
+        --border-color: #000000;
+        --theme-accent-color: #aec6cf; /* Default: Pastel Blue */
+        --theme-contrast-color: #000000; /* Default for light accent */
+        --secondary-action-color: #85a0aa; /* Default: Darkened Pastel Blue */
+        --border-width: 2px;
+        --shadow-offset: 5px;
+    }
+
+    body {
+        background-color: var(--body-bg);
+        font-family:
+            -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+            Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+            "Segoe UI Symbol";
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .fw-bold {
+        font-weight: 700 !important;
+        color: var(--border-color);
+    }
+
+    .btn {
+        border: var(--border-width) solid var(--border-color);
+        box-shadow: 3px 3px 0px var(--border-color);
+        border-radius: 0.5rem;
+        font-weight: 700;
+        transition: all 0.15s ease-out;
+        padding: 0.5rem 1rem;
+    }
+
+    .btn:hover {
+        /* No specific hover transform/shadow */
+    }
+
+    .btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0px var(--border-color);
+    }
+
+    .btn-primary {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-primary:hover,
+    .btn-primary:focus,
+    a.btn-primary:hover,
+    a.btn-primary:focus,
+    .btn-group .btn-primary:hover,
+    .btn-group .btn-primary:focus,
+    .btn-group a.btn-primary:hover,
+    .btn-group a.btn-primary:focus {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important; /* Darker hover effect */
+        border-color: var(--border-color) !important;
+    }
+    .btn-primary:active,
+    a.btn-primary:active,
+    .btn-group .btn-primary:active,
+    .btn-group a.btn-primary:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    /* Enhanced styles for outline buttons to maintain theme colors */
+    .btn-outline-primary {
+        color: var(--border-color) !important;
+        border-color: var(--border-color) !important;
+        background-color: transparent !important;
+    }
+
+    /* All possible states for btn-outline-primary */
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus,
+    .btn-outline-primary.active,
+    .btn-outline-primary.dropdown-toggle.show,
+    a.btn-outline-primary:hover,
+    a.btn-outline-primary:focus,
+    a.btn-outline-primary.active,
+    a.btn-outline-primary.dropdown-toggle.show,
+    .btn-group .btn-outline-primary:hover,
+    .btn-group .btn-outline-primary:focus,
+    .btn-group .btn-outline-primary:active,
+    .btn-group .btn-outline-primary.active,
+    .btn-group .btn-outline-primary.dropdown-toggle.show,
+    .btn-group a.btn-outline-primary:hover,
+    .btn-group a.btn-outline-primary:focus,
+    .btn-group a.btn-outline-primary:active,
+    .btn-group a.btn-outline-primary.active,
+    .btn-group a.btn-outline-primary.dropdown-toggle.show,
+    .btn-group-sm .btn-outline-primary:hover,
+    .btn-group-sm .btn-outline-primary:focus,
+    .btn-group-sm .btn-outline-primary:active,
+    .btn-group-sm .btn-outline-primary.active,
+    .btn-group-sm .btn-outline-primary.dropdown-toggle.show,
+    .btn-group-sm a.btn-outline-primary:hover,
+    .btn-group-sm a.btn-outline-primary:focus,
+    .btn-group-sm a.btn-outline-primary:active,
+    .btn-group-sm a.btn-outline-primary.active,
+    .btn-group-sm a.btn-outline-primary.dropdown-toggle.show,
+    .w-100 .btn-outline-primary:hover,
+    .w-100 .btn-outline-primary:focus,
+    .w-100 .btn-outline-primary:active,
+    .w-100 .btn-outline-primary.active,
+    .w-100 a.btn-outline-primary:hover,
+    .w-100 a.btn-outline-primary:focus,
+    .w-100 a.btn-outline-primary.active,
+    .w-100 a.btn-outline-primary.active,
+    .w-100 a.btn-outline-primary.dropdown-toggle.show {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    /* Focus states */
+    .btn-check:focus + .btn-outline-primary,
+    .btn-outline-primary:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    .btn-warning {
+        background-color: var(--theme-accent-color) !important;
+        color: var(--theme-contrast-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-warning:hover,
+    .btn-warning:focus,
+    a.btn-warning:hover,
+    a.btn-warning:focus,
+    .btn-group .btn-warning:hover,
+    .btn-group .btn-warning:focus,
+    .btn-group a.btn-warning:hover,
+    .btn-group a.btn-warning:focus {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--secondary-action-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-warning:active,
+    a.btn-warning:active,
+    .btn-group .btn-warning:active,
+    .btn-group a.btn-warning:active {
+        color: var(--theme-contrast-color) !important;
+        background-color: var(--theme-accent-color) !important;
+        border-color: var(--border-color) !important;
+    }
+    .btn-check:focus + .btn-warning,
+    .btn-warning:focus {
+        box-shadow: 0 0 0 0.25rem rgba(174, 198, 207, 0.25) !important;
+    }
+
+    .btn-secondary {
+        background-color: var(--secondary-action-color);
+        color: var(--theme-contrast-color);
+        border-color: var(--border-color);
+    }
+    .btn-secondary:hover {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel {
+        background-color: var(--panel-bg);
+        border: var(--border-width) solid var(--border-color);
+        border-radius: 1rem;
+        box-shadow: var(--shadow-offset) var(--shadow-offset) 0px
+            var(--border-color);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* Ensures children conform to rounded corners */
+    }
+
+    .panel-header {
+        padding: 0.75rem 1.25rem;
+        border-bottom: var(--border-width) solid var(--border-color);
+        background-color: var(--theme-accent-color);
+    }
+    .panel-header h5,
+    .panel-header h4 {
+        color: var(--theme-contrast-color);
+    }
+
+    .panel-body {
+        padding: 1rem;
+        flex-grow: 1;
+    }
+</style>
+{% endblock %} {% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('trips.view_trip', trip_id=trip.id) }}"
+                        >{{ trip.name }}</a
+                    >
+                </li>
+                <li class="breadcrumb-item active">Manage Advances</li>
+            </ol>
+        </nav>
+        <h1 class="mb-2">Manage Advance Payments</h1>
+        <p class="text-muted">
+            Add advance payments made by participants for this trip. These will
+            be included in the balance calculations.
+        </p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a
+            href="{{ url_for('trips.view_trip', trip_id=trip.id) }}"
+            class="btn btn-secondary"
+        >
+            <i class="fas fa-arrow-left me-2"></i>Back to Trip
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Current Advances -->
+    <div class="col-md-6 mb-4">
+        <div class="panel h-100">
+            <div class="panel-header">
+                <h5 class="mb-0">Current Advance Payments</h5>
+            </div>
+            <div class="panel-body">
+                {% if advances %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Participant</th>
+                                <th>Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for advance in advances %}
+                            <tr>
+                                <td>
+                                    {% if advance.type == 'unregistered' %} {{
+                                    advance.name }}
+                                    <span class="badge bg-info"
+                                        >unregistered</span
+                                    >
+                                    {% else %} {{ advance.name }} {% if
+                                    advance.id|string == current_user.id|string
+                                    %}
+                                    <span class="badge bg-primary">You</span>
+                                    {% endif %} {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    ₹{{ advance.amount|round(2) }}
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm btn-outline-primary edit-advance"
+                                            data-participant-id="{{ advance.id }}"
+                                            data-amount="{{ advance.amount }}"
+                                        >
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm btn-outline-danger delete-advance"
+                                            data-participant-id="{{ advance.id }}"
+                                        >
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-center">No advance payments recorded yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Advance Form -->
+    <div class="col-md-6 mb-4">
+        <div class="panel h-100">
+            <div class="panel-header">
+                <h5 class="mb-0">Add Advance Payment</h5>
+            </div>
+            <div class="panel-body">
+                <form
+                    method="POST"
+                    action="{{ url_for('trips.manage_advances', trip_id=trip.id) }}"
+                >
+                    <input type="hidden" name="action" value="add" />
+                    <div class="mb-3">
+                        <label for="participant_id" class="form-label"
+                            >Participant</label
+                        >
+                        <select
+                            class="form-select"
+                            id="participant_id"
+                            name="participant_id"
+                            required
+                        >
+                            <option value="" disabled selected>
+                                Select a participant
+                            </option>
+
+                            <!-- Registered participants -->
+                            <optgroup label="Registered Users">
+                                {% for participant in registered_participants %}
+                                <option value="{{ participant.id }}">
+                                    {{ participant.name }}{% if participant.id
+                                    == current_user.id %} (You){% endif %}
+                                </option>
+                                {% endfor %}
+                            </optgroup>
+
+                            <!-- Unregistered participants -->
+                            {% if unregistered_participants %}
+                            <optgroup label="Unregistered Participants">
+                                {% for name in unregistered_participants %}
+                                <option value="unregistered_{{ name }}">
+                                    {{ name }}
+                                </option>
+                                {% endfor %}
+                            </optgroup>
+                            {% endif %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Amount</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₹</span>
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="amount"
+                                name="amount"
+                                min="0.01"
+                                step="0.01"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Add Advance
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-info">
+    <i class="fas fa-info-circle me-2"></i>
+    <strong>About Advance Payments:</strong> Advance payments are funds
+    contributed by participants before or during the trip that aren't tied to
+    specific expenses. These are included in balance calculations and help track
+    who has already contributed to the trip budget.
+</div>
+{% endblock %} {% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Edit advance functionality
+        document.querySelectorAll(".edit-advance").forEach((button) => {
+            button.addEventListener("click", function () {
+                const participantId = this.dataset.participantId;
+                const amount = this.dataset.amount;
+
+                // Fill the form with existing data
+                document.getElementById("participant_id").value = participantId;
+                document.getElementById("amount").value = amount;
+
+                // Add hidden inputs for edit action
+                const form = document.querySelector("form");
+
+                // Remove any existing hidden inputs
+                const existingInputs = form.querySelectorAll(
+                    'input[type="hidden"][name="action"]',
+                );
+                existingInputs.forEach((input) => input.remove());
+
+                // Add new hidden inputs
+                const actionInput = document.createElement("input");
+                actionInput.type = "hidden";
+                actionInput.name = "action";
+                actionInput.value = "edit";
+                form.appendChild(actionInput);
+
+                // Note: We do NOT add a new participant_id hidden input as it would conflict
+                // with the select element that already has name="participant_id"
+
+                // Change submit button text
+                const submitButton = form.querySelector(
+                    'button[type="submit"]',
+                );
+                submitButton.innerHTML =
+                    '<i class="fas fa-save me-2"></i>Update Advance';
+            });
+        });
+
+        // Delete advance functionality
+        document.querySelectorAll(".delete-advance").forEach((button) => {
+            button.addEventListener("click", function (e) {
+                e.preventDefault();
+                const participantId = this.dataset.participantId;
+
+                if (
+                    confirm(
+                        "Are you sure you want to delete this advance payment?",
+                    )
+                ) {
+                    // Create a form for the delete request
+                    const form = document.createElement("form");
+                    form.method = "POST";
+                    form.action =
+                        "{{ url_for('trips.manage_advances', trip_id=trip.id) }}";
+
+                    // Add CSRF token if available (handles both Flask-WTF and other CSRF implementations)
+                    const csrfTokenElement =
+                        document.querySelector('meta[name="csrf-token"]') ||
+                        document.querySelector('input[name="csrf_token"]');
+
+                    if (csrfTokenElement) {
+                        const csrfInput = document.createElement("input");
+                        csrfInput.type = "hidden";
+                        csrfInput.name = "csrf_token";
+                        csrfInput.value =
+                            csrfTokenElement.content || csrfTokenElement.value;
+                        form.appendChild(csrfInput);
+                    }
+
+                    // Add hidden inputs
+                    const actionInput = document.createElement("input");
+                    actionInput.type = "hidden";
+                    actionInput.name = "action";
+                    actionInput.value = "delete";
+                    form.appendChild(actionInput);
+
+                    const idInput = document.createElement("input");
+                    idInput.type = "hidden";
+                    idInput.name = "participant_id";
+                    idInput.value = participantId;
+                    form.appendChild(idInput);
+
+                    // Append form to body and submit
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

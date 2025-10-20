@@ -1,0 +1,10 @@
+flask==2.0.1
+werkzeug==2.0.1
+flask-sqlalchemy==2.5.1
+flask-login==0.5.0
+python-dotenv==0.19.0
+email-validator==2.1.0.post1
+bcrypt==4.0.1
+sqlalchemy==1.4.23
+flask-wtf==0.15.1
+reportlab==4.0.8
